@@ -1,3 +1,5 @@
+// RUN IT FROM ROOT via .L splitTree_forJiri
+
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -27,20 +29,17 @@ Float_t Apla, Spher, HTL, JetMt, HT3;
 Float_t	MEvent,	MT1NL;
 
 // newly added vars: 
-Float_t M01mall, M0nl, M1nl, MT0nl, Met, Mtt, Mva_max, Wmt, Wpt, Jetm, Mva_max_next;
+Float_t M01mall, M0nl, M1nl, MT0nl, Met, Mtt, Mva_max, Wmt, Wpt, Jetm;//, Mva_max_next;
 Float_t Centr,DRminejet,DiJetDrmin, Ht, Ht20, Ktminp, Lepdphimet, Lepemv;
 
 Double_t apla, spher, htl, jetmt, ht3;
 Double_t mevent, mT1nl;
 
 // newly added vars: 
-Double_t m01mall, m0nl, m1nl, mT0nl, met, mtt, mva_max, wmt, wpt, jetm, mva_max_next;
+Double_t m01mall, m0nl, m1nl, mT0nl, met, mtt, mva_max, wmt, wpt, jetm;//, mva_max_next;
 Double_t centr,dRminejet,diJetDrmin, ht, ht20, ktminp, lepdphimet, lepemv;
 
 Int_t njets, NJets;
-
-
-
 
 void splitTree(bool useEle)
 {
@@ -123,7 +122,7 @@ void splitTree(bool useEle)
 
   //   TString inDir="inputs_test_"+lchan+"/";
   TString inDir="inputs_"+lchan+"_"+dat_made+"/";
-  TString outDir="/work/budvar-clued0/kuceraja/tt_leptonjets/samples/incl_mva_max_next/split_trees_3samples_"+lchan+"_"+dat_made;
+  TString outDir="/work/budvar-clued0/kuceraja/tt_leptonjets/samples/split_trees_3samples_"+lchan+"_"+dat_made+"/";
   std::cout<<"New *.root files are in: "+outDir<<endl;
 
   // new for Jiri
@@ -192,7 +191,7 @@ void splitTree(bool useEle)
   TTree* Wbb_tree = (TTree*)input->Get("events");
   tree_list.Add(Wbb_tree);
   TH1D* Wbb_hist = (TH1D*)input->Get("addSF");
-  histo_list.Add(Wlp_hist);
+  histo_list.Add(Wbb_hist);
   cout << "   addSF " << addSF->GetBinContent(1) << " " << addSF->GetBinContent(2) << " " << addSF->GetBinContent(3) << " " << addSF->GetBinContent(4) << endl;
 
 
@@ -465,7 +464,7 @@ void splitTree(bool useEle)
       nn_tree->Branch("Mtt",&Mtt,"Mtt/F",bsize);
       nn_tree->Branch("Mva_max",&Mva_max,"Mva_max/F",bsize);
 
-      nn_tree->Branch("Mva_max_next",&Mva_max_next,"Mva_max_next/F",bsize);
+      //nn_tree->Branch("Mva_max_next",&Mva_max_next,"Mva_max_next/F",bsize);
 
       nn_tree->Branch("Wmt",&Wmt,"Wmt/F",bsize);
       nn_tree->Branch("Wpt",&Wpt,"Wpt/F",bsize);
@@ -499,7 +498,7 @@ void splitTree(bool useEle)
       for (Long64_t ievt=0; ievt<curtree->GetEntries();ievt++) { // begin
           //      for (Long64_t ievt=0; ievt<100;ievt++) { // begin
 
-          if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
+         // if (ievt%1000 == 0) std::cout << "--- ... Processing event: " << ievt << std::endl;
 
           curtree->GetEntry(ievt);
 
@@ -549,7 +548,7 @@ void splitTree(bool useEle)
           Mtt=mtt;
           Mva_max=mva_max;
 
-          Mva_max_next=mva_max_next;
+          //Mva_max_next=mva_max_next;
 
           Wmt=wmt;
           Wpt=wpt;
