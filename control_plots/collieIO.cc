@@ -1,5 +1,10 @@
 
-#include "input_libs.h"
+#include "../input_libs.h"
+//#include "./lib/"
+//#include "include/*.hh"
+//#include "./io/src/"
+
+#include "./collie/io/include/CollieIOFile.hh"
 
 using namespace std;
 
@@ -12,7 +17,6 @@ void writeCanvasFiles(TCanvas *canv, const char *pre, const char *post) {
     sprintf(file,"%s%s.png",pre, post);
     canv->Print(file);
     return;    gROOT->SetStyle("Plain");
-
 }
 
 double average_calculator(TH1D * hist, TH1D * central_hist, Int_t start_bin) {
@@ -40,12 +44,10 @@ void Usage() {
 }
 
 int main(int argc, char* argv[]) {
-
     gROOT->Reset();
     if(argc != 10) { Usage();
         exit(1);
     }
-
     TString treeType = argv[1];
     TString runPeriod = argv[2];
     TString cutSet = argv[3];

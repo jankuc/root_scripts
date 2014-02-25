@@ -1333,50 +1333,53 @@ void sf_processor(Double_t &ttbar_sf_lj, Double_t &ttbar_sf_ll, Double_t &mjets_
 
 void Usage() {
   printf("./mhst.exe => User's input: customize  'inPATH' TString to suit actual path to your folder\n");
-  printf("Arguments order: <treeType> <run_period> <cut_set> <syst_setup> <channel> <tag_bin> <working_point> \n");
+  printf("Arguments order: <channel: {ejets/mujets}> \n");
 }
 
 int main(int argc, char* argv[])
 {
 
   gROOT->Reset();
-  if(argc != 8) { Usage();
+  if(argc != 2) { Usage();
       exit(1);
     }
 
-  TString treeType = argv[1];
-  TString runPeriod = argv[2];
-  TString cutSet = argv[3];
-  TString sysSet = argv[4];
-  TString lepType = argv[5];
-  TString tagBin =  argv[6];
-  TString WP = argv[7];
+  TString runPeriod = "RunII";
+  TString cutSet = "VCJetDef";
+  // TString sysSet = argv[4];
+  TString lepType = argv[1];
+  TString tagBin =  "beforeTag";
   TString looseTight;
 
-  std::cout<<std::endl<<"Epoch: "<<runPeriod<<"     TreeType:"<<treeType<<std::endl;
+  std::cout<<std::endl<<"Epoch: "<<runPeriod<<endl;
 
-  if (!strcmp(argv[2], "RunIIb")) m_rpf = 0;
-  if (!strcmp(argv[2], "RunIIb1")) m_rpf = 1;
-  if (!strcmp(argv[2], "RunIIb2")) m_rpf = 2;
-  if (!strcmp(argv[2], "RunIIb34")) m_rpf = 3;
-  if (!strcmp(argv[2], "RunIIa")) m_rpf = 4;
-  if (!strcmp(argv[2], "RunII")) m_rpf = 5;
+  //  if (!strcmp(runPeriod, "RunIIb")) m_rpf = 0;
+  //  if (!strcmp(runPeriod, "RunIIb1")) m_rpf = 1;
+  //  if (!strcmp(runPeriod, "RunIIb2")) m_rpf = 2;
+  //  if (!strcmp(runPeriod, "RunIIb34")) m_rpf = 3;
+  //  if (!strcmp(runPeriod, "RunIIa")) m_rpf = 4;
+  //  if (!strcmp(runPeriod, "RunII")) m_rpf = 5;
+  m_rpf = 5;
+  if (!strcmp(lepType, "ejets")){
+      m_ltf = 1;
+    }
+  if (!strcmp(lepType, "mujets")) {
+      m_ltf = 2;
+    }
 
-  if (!strcmp(argv[5], "ejets")) m_ltf = 1;
-  if (!strcmp(argv[5], "mujets")) m_ltf = 2;
+  //  if (!strcmp(tagBin, "beforeTag")) m_tbf = 0;
+  //  if (!strcmp(tagBin, "0Tag")) m_tbf = 1;
+  //  if (!strcmp(tagBin, "1Tag")) m_tbf = 2;
+  //  if (!strcmp(tagBin, "2Tag")) m_tbf = 3;
+  //  if (!strcmp(tagBin, "inc1Tag")) m_tbf = 4;
+  m_tbf = 0;
 
-  if (!strcmp(argv[6], "beforeTag")) m_tbf = 0;
-  if (!strcmp(argv[6], "0Tag")) m_tbf = 1;
-  if (!strcmp(argv[6], "1Tag")) m_tbf = 2;
-  if (!strcmp(argv[6], "2Tag")) m_tbf = 3;
-  if (!strcmp(argv[6], "inc1Tag")) m_tbf = 4;
+  //    Int_t ltf;//1-ej, 2-mj
+  //    Int_t rpf;//0-IIb, 1-IIb1, 2-IIb2, 3-IIb34, 4-IIa, 5-II
+  //    Int_t jbf;//0-2jb, 1-3jb, 2-4jb
+  //    Int_t tbf;//0-bt, 1-0t, 2-1t, 3-2t, 4-i1t
 
-  /*Int_t ltf;//1-ej, 2-mj
-    Int_t rpf;//0-IIb, 1-IIb1, 2-IIb2, 3-IIb34, 4-IIa, 5-II
-    Int_t jbf;//0-2jb, 1-3jb, 2-4jb
-    Int_t tbf;//0-bt, 1-0t, 2-1t, 3-2t, 4-i1t*/
-
-  const Int_t Ntypes = 18;//!all - 18, ttbar - 12, topmass - 20
+  const Int_t Ntypes = 18; // !all - 18, ttbar - 12, topmass - 20
 
   TString Type_CP;
   TString Type_HF;
@@ -1426,11 +1429,14 @@ int main(int argc, char* argv[])
       //    if(type_index == 1) inPATH = Form("/prj_root/2671/top_write/savitsky/for_%s/final_tt13_dIbad/controlplots/final/%s/%s/Central/%s/%s/%s/%s/%s_miniTree.root", lepType.Data(), runPeriod.Data(), cutSet.Data(), lepType.Data(), tagBin.Data(), WP.Data(), looseTight.Data(), Type_CP.Data());
 
       TString inPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
-      //TString inPATH = Form("/work/dude-clued0/ajung/D0/TopStuff/Lidiaz_TMVA/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
-      if(type_index == 0) inPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/incl_mva_max_next/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
-      if(type_index == 1) inPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/incl_mva_max_next/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
 
-      //TString outPATH = Form("/prj_root/2671/top_write/savitsky/%s/controlplots/final/%s/%s/%s/%s/%s/%s/tight/ff_myhist_%s.root", treeType.Data(), runPeriod.Data(), cutSet.Data(), sysSet.Data(), lepType.Data(), tagBin.Data(), WP.Data(), Type_HF.Data());
+      std::cout<<inPATH<<endl;
+      std::cout<<inPATH.Data()<<endl;
+      //TString inPATH = Form("/work/dude-clued0/ajung/D0/TopStuff/Lidiaz_TMVA/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
+      //if(type_index == 0) inPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
+      //if(type_index == 1) inPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/split_trees_3samples_%s_1119/%s_miniTree.root", lepNNTrees.Data(), Type_CP.Data());
+
+      TString outPATH = Form("/work/budvar-clued0/kuceraja/tt_leptonjets/samples/split_trees_3samples_%s_1119/ff_myhist_%s.root", lepNNTrees.Data(), Type_CP.Data());
 
       //TFile *fadd = new TFile(inPATH.Data(),"READ");
       //	std::cout<<"Data added."<<std::endl;
@@ -1448,8 +1454,8 @@ int main(int argc, char* argv[])
       fChain->Add(inPATH);
       fChain->SetBranchStatus("*", 0);
 
-      //TFile *mini_file = new TFile(outPATH,"RECREATE");
-      //if(!mini_file) { std::cout<<"\t Error"<<std::endl; return 0;}
+      //      TFile *mini_file = new TFile(outPATH,"RECREATE");
+      //    if(!mini_file) { std::cout<<"\t Error"<<std::endl; return 0;}
       //Declaration of leaf types
 
       Int_t	_njt = 999;
@@ -1460,7 +1466,7 @@ int main(int argc, char* argv[])
       Float_t _weight_twoJet = 1.0; // =0
       Float_t _weight_threeJet = 1.0; // =0
       Float_t _weight_fourJet = 1.0; // =0
-      Float_t _weight_pdf_Shape = 1.0;
+      Float_t _weight_pdf_Shape = 0.0;
 
       //        _weight_twoJet = addsfhist->GetBinContent(6)*addsfhist->GetBinContent(2);
       //        _weight_threeJet = addsfhist->GetBinContent(7)*addsfhist->GetBinContent(3);
@@ -1475,13 +1481,14 @@ int main(int argc, char* argv[])
 
       fChain->SetBranchStatus("NJets", 1);  // Process these branches
       fChain->SetBranchStatus("Mva_max", 1);
-      fChain->SetBranchStatus("Mva_max_next", 1);  // COMMENTED OUT, BECAUSE WE DONT HAVE THESE VARIABLES  IN OUR *.root FILES
+      //fChain->SetBranchStatus("Mva_max_next", 1);  // COMMENTED OUT, BECAUSE WE DONT HAVE THESE VARIABLES  IN OUR *.root FILES
       fChain->SetBranchStatus("Weight", 1);
       //fChain->SetBranchStatus("weight_pdf", 1);
 
       fChain->SetBranchAddress("NJets", &_njt);
       fChain->SetBranchAddress("Mva_max", &_mva_max);
-      fChain->SetBranchAddress("Mva_max", &_mva_max_next);
+      //fChain->SetBranchAddress("Mva_max", &_mva_max_next);
+      _mva_max_next = _mva_max;
       fChain->SetBranchAddress("Weight", &_weight);
       //fChain->SetBranchAddress("Weight", &_weight_pdf);
 
@@ -1524,23 +1531,24 @@ int main(int argc, char* argv[])
           // mva_max_next has to be in <0,1>
           if(_mva_max_next < 0.0) _mva_max_next = 0.0;
           if(_mva_max_next > 1.0) _mva_max_next = 1.0;
+          //_mva_max_next = 1;
 
           // this won't happen, because we have pdf_flag == 0
-//          if(type_index != 0 && type_index != 1 && pdf_flag !=0 ) {
-//              _weight_pdf_Shape = 1.0;
-//              if(pdf_flag == 1) {
-//                  for(Int_t kk=1; kk<40; kk+=2) {//0 - central, 1-20 - pos, 21-40 - neg
-//                      _weight_pdf_Shape = _weight_pdf_Shape + ((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0])*((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0]);
-//                    }
-//                  _weight_pdf_Shape = sqrt(_weight_pdf_Shape) + 1.0;
-//                }
-//              if(pdf_flag == 2) {
-//                  for(Int_t kk=2; kk<41; kk+=2) {//0 - central, 1-20 - pos, 21-40 - neg
-//                      _weight_pdf_Shape = _weight_pdf_Shape + ((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0])*((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0]);
-//                    }
-//                  _weight_pdf_Shape = 1.0 - sqrt(_weight_pdf_Shape);
-//                }
-//            }
+          //          if(type_index != 0 && type_index != 1 && pdf_flag !=0 ) {
+          //              _weight_pdf_Shape = 1.0;
+          //              if(pdf_flag == 1) {
+          //                  for(Int_t kk=1; kk<40; kk+=2) {//0 - central, 1-20 - pos, 21-40 - neg
+          //                      _weight_pdf_Shape = _weight_pdf_Shape + ((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0])*((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0]);
+          //                    }
+          //                  _weight_pdf_Shape = sqrt(_weight_pdf_Shape) + 1.0;
+          //                }
+          //              if(pdf_flag == 2) {
+          //                  for(Int_t kk=2; kk<41; kk+=2) {//0 - central, 1-20 - pos, 21-40 - neg
+          //                      _weight_pdf_Shape = _weight_pdf_Shape + ((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0])*((_weight_pdf[0] - _weight_pdf[kk])/_weight_pdf[0]);
+          //                    }
+          //                  _weight_pdf_Shape = 1.0 - sqrt(_weight_pdf_Shape);
+          //                }
+          //            }
 
 
           //if(nEvt == 100) std::cout<<type_index<<" Shape = "<<_weight_pdf_Shape<<std::endl;
@@ -1656,11 +1664,11 @@ int main(int argc, char* argv[])
 
       std::cout<<"RP:  '"<<runPeriod<<"'   TB:  '"<<tagBin<<"'   Sample:  '"<<Type_CP<<"'   N_events = "<<nentries<<"   N_stat = "<<overall_stat<<std::endl;
 
-      //mini_file->Write();
-      //mini_file->Close();
+      //      mini_file->Write();
+      //      mini_file->Close();
 
       delete fChain;
-      //delete mini_file;
+      //  <    delete mini_file;
 
       delete  h_mva_max_2jb;
       delete  h_mva_max_3jb;
@@ -1674,6 +1682,8 @@ int main(int argc, char* argv[])
       delete  h_mva_2D_inc2jb;
       delete  h_NJets;
 
+
+
     }
 
   //!Calculating W+jets SFs
@@ -1682,7 +1692,7 @@ int main(int argc, char* argv[])
   m_wjets_sf_3 = (stat_for_wjets_sf_3[0] - ov_stat_for_wjets_sf_3)/ov_wstat_for_wjets_sf_3;
   m_wjets_sf_4 = (stat_for_wjets_sf_4[0] - ov_stat_for_wjets_sf_4)/ov_wstat_for_wjets_sf_4;
 
-  TString txt_outPATH = Form("%s%s_%s_%s_%s_%d.txt", outputDir.Data(), treeType.Data(), runPeriod.Data(), sysSet.Data(), lepType.Data(), mass_point);
+  TString txt_outPATH = Form("%s%s_%s_%d.txt", outputDir.Data(), runPeriod.Data(), lepType.Data(), mass_point);
   ofstream myfile;
   myfile.open(txt_outPATH);
   myfile<<m_wjets_sf_2<<std::endl<<m_wjets_sf_3<<std::endl<<m_wjets_sf_4<<std::endl;

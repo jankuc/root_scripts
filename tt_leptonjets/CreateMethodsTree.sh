@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-# Run CreateMethodsTree for all samples and given methods
+# Run CreateMethodsTree for all leptons and given methods
 # CreateMethodsTree.C creates root file with one tree,
 # where discriminant from all channels are presented and
 # add lists with EventWeight and ...
@@ -8,20 +8,22 @@
 input_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples
 output_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root
 results_txt_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_txt
-#script_path=~/scripts/CreateMethodsTree
+# assumed path: results_txt/ {method name} / {ele/muo} / {data, QCD, ...}_miniTree.txt
 script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/tt_leptonjets/CreateMethodsTree
 
-for samples in muo; do
-  echo $samples;
-  for methods in MBC ; do
-    echo $methods
-    for i in ${input_root_files_path}/split_trees_3samples_${samples}_1119/*.root; do
-        echo $(basename $i)
-        $script_path \
-        $i \
-        ${results_txt_path}/${methods}/${samples}/$(basename ${i/.root/.txt}) \
-        ${methods} \
-        ${output_root_files_path}/split_trees_3samples_${samples}_1119/${methods}/$(basename ${i/_Topo/})
-    done
-  done
+for leptons in muo; do
+	echo $leptons
+    for methods in MBC_50_20_MD_noTrans; do # MBC_50_20_MD_noTrans; do
+		echo $methods
+		for i in ${input_root_files_path}/split_trees_3samples_${leptons}_1119/*.root; do
+			echo $(basename $i)
+			mkdir -p "${output_root_files_path}/${methods}/split_trees_3samples_${leptons}_1119/"
+			
+			$script_path \
+			$i \
+			${results_txt_path}/${methods}/${leptons}/$(basename ${i/.root/.txt}) \
+			${methods} \
+			${output_root_files_path}/${methods}/split_trees_3samples_${leptons}_1119/$(basename ${i})
+		done
+	done
 done

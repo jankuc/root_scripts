@@ -24,14 +24,14 @@ using namespace std;
 
 /**
   source_main       *.root full path of one of channels (QCD, data, Wlp, ...)
-  source_channel1    *.txt full path of discriminant of one of channels (QCD, data, Wlp, ...)
+  source_channel1   *.txt full path of discriminant of one of channels (QCD, data, Wlp, ...)
   treeName          name of separation method -> we will name tree after it
   outputFileName    *.root full output path of one of channels (QCD, data, Wlp, ...)
 
   EXAMPLE:          /work/budvar-clued0/fjfi-D0/tt_leptonjets/samples/split_trees_3samples_muo_1119/ZZ_miniTree.root
                     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_txt/GLM/muo/ZZ_miniTree.txt
                     GLM
-                    /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root/split_trees_3samples_muo_1119/GLM/ZZ_miniTree.root
+                    /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root/GLM/split_trees_3samples_muo_1119/ZZ_miniTree.root
 */
 void  CreateMethodsTree(char *source_main = "colTree.root",
                         char *source_channel1 = "colTree.in",
