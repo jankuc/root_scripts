@@ -26,12 +26,13 @@ using namespace std;
 
 void  CreateMethodsTree(const char *inputFileName, std::string method , const char *outputFileName){
 
-  TString *TREE_NAME = "nn_tree";
+  TString TREE_NAME = "nn_tree";
 
   TFile *f_input  = new TFile(inputFileName, "read");
   TTree *t_input  = (TTree*)f_input->Get(method.c_str());
 
-  Double_t Weight; 	t_input->SetBranchAddress("Weight", &Weight);
+  Double_t Weight;
+  t_input->SetBranchAddress("Weight", &Weight);
   Double_t Ht;
   t_input->SetBranchAddress("Ht", &Ht);
   
@@ -49,7 +50,7 @@ void  CreateMethodsTree(const char *inputFileName, std::string method , const ch
   }
 
   Int_t n_channels = 1;
-  Double_t leafLinks[n_channels]; // maybe it has to be 3?
+  Double_t leafLinks[n_channels]; // maybe it has to be 3
 
   std::string leafName_input[n_channels];
   std::string leafName_output[n_channels];

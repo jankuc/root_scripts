@@ -2,9 +2,10 @@
 
 # Create txt file from root file
 
-input_root_files_path=/work/budvar-clued0/francji/tt_leptonjets_2014_01/samples/
-output_root_files_path=/work/budvar-clued0/francji/tt_leptonjets_2014_01/samples_txt
-script_path=/work/budvar-clued0/francji/scripts/top_extractor_new_2014_01
+input_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples/
+output_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples_txt_new
+script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/top_extractor/top_extractor_tt_leptonjets
+
 
 for samples in split_trees_3samples_ele_1119 split_trees_3samples_muo_1119; do #test_tree train_tree split_trees
   mkdir -p ${output_root_files_path}/${samples}

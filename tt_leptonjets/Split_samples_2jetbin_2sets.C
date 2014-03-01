@@ -23,7 +23,7 @@ using namespace std;
 */
 void  cutTree(char *source_main, char *outputFileName, char *cutString){
 
-    TFile *f_source = new TFile(source_main);                 // default parameter read only
+  TFile *f_source = new TFile(source_main, "READ");                 // default parameter read only
     TFile *f_output = new TFile(outputFileName, "RECREATE");  // add parameter to recreate tree
 
     TTree *t_source = (TTree *) f_source->Get("nn_tree");

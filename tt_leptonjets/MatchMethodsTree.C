@@ -41,7 +41,7 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
   Int_t     n_events[]        =  {0};
   Double_t  channel_links[1];
   char     *source_channel[]  =  {source_channel1,  NULL};
-  char     *channel_names[]   =  {"ttA_172",NULL};
+  char     *channel_names[]   =  {"ttA_172", NULL};
   //std::string channel_names[] = { "ttA_172"};
   char     *channel_types[]   =  {"ttA_172/D"};
   Float_t   max_disc[]        =  {0};

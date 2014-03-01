@@ -64,7 +64,6 @@ void  CreateMethodsTree(char *source_main = "colTree.root",
 
     // create output branches
     t_output->Branch("Weight",         &Weight,         "Weight/D");
-    //t_output->Branch("HT_AllJetsLeptonMET", &HT_AllJetsLeptonMET, "HT_AllJetsLeptonMET/D");
 
     //t_output->Branch(channel_names[i].c_str(),   &s,   std::string(channel_names[i]+"/D").c_str());
     for (Int_t i = 0; channel_names[i]; i++){
