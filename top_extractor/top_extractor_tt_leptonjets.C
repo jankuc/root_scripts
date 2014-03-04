@@ -9,7 +9,7 @@
 //
 
 #ifndef __CINT__
-// Include all needed headers here e
+// Include all needed headers here
 #include <iostream>
 #include "TFile.h"
 #include "TTree.h"
@@ -79,23 +79,24 @@ void top_extractor_new() {
 	fprintf(dest_file,"%30.20f",MEvent);
 	fprintf(dest_file,"%30.20f",MT1NL);
 
-	fprintf(dest_file,"%30.20f",M01mall);
-	fprintf(dest_file,"%30.20f",M0nl);
-	fprintf(dest_file,"%30.20f",M1nl);
-	fprintf(dest_file,"%30.20f",MT0nl);
-	fprintf(dest_file,"%30.20f",Met);
-	fprintf(dest_file,"%30.20f",Mtt);
-	fprintf(dest_file,"%30.20f",Mva_max);
-	fprintf(dest_file,"%30.20f",Wmt);
-	fprintf(dest_file,"%30.20f",Wpt);
-	fprintf(dest_file,"%30.20f",Centr);
-	fprintf(dest_file,"%30.20f",DRminejet);
-	fprintf(dest_file,"%30.20f",DiJetDrmin);
-	fprintf(dest_file,"%30.20f",Ht);
-	fprintf(dest_file,"%30.20f",Ht20);
-	fprintf(dest_file,"%30.20f",Ktminp);
-	fprintf(dest_file,"%30.20f",Lepdphimet);
-	fprintf(dest_file,"%30.20f",Lepemv);
+	fprintf(dest_file,"%30.20f",M01mall); //M01mall - invariant mass of leading and next-to leading jet divided by invariant mass of full event
+	fprintf(dest_file,"%30.20f",M0nl);    //M0nl - invariant mass of leading jet, lepton and neutrino
+	fprintf(dest_file,"%30.20f",M1nl);    //M1nl - invariant mass of next-to-leading jet, lepton and neutrino
+	fprintf(dest_file,"%30.20f",MT0nl);   //MT0nl - transverse mass of leading jet, lepton and neutrino
+	fprintf(dest_file,"%30.20f",Met);     //Met - missing Et (imbalance in pT of event) due to neutrino(s)
+	fprintf(dest_file,"%30.20f",Mtt);     //Mtt - invariant mass of top and anti-top quark pair candidate
+	fprintf(dest_file,"%30.20f",Mva_max); //Mva_max - maximum mva output of jet, the higher the more likely to be that jet originates from b-quark. signal usually peaks at 1, bg like Wlp at 0.
+	fprintf(dest_file,"%30.20f",Wmt);    //Wmt - transverse mass of W boson candidate, multijet/qcd bg peaks lower than signa
+	fprintf(dest_file,"%30.20f",Wpt);    //Wpt - transverse momentum of W boson candidate
+	fprintf(dest_file,"%30.20f",Centr);  //Centr - centrality, ratio of scaler sum of transverse momentum of all jets to energy of all jets
+	fprintf(dest_file,"%30.20f",DRminejet);  //DRminejet - distance dR between electron cand and jet, used to suppress electron fakes
+	fprintf(dest_file,"%30.20f",DiJetDrmin); //DiJetDrmin - distance dR between jets
+	fprintf(dest_file,"%30.20f",Ht);         //Ht - scalar sum of transverse momentum of all jets
+	fprintf(dest_file,"%30.20f",Ht20);       //Ht20 - same as above but only for jets with |eta| < 2
+	fprintf(dest_file,"%30.20f",Ktminp);     //Ktminp - minimal dR between 2 jets multiplied by minimal transverse momentum, than divided by scalar sum of lepton transverse momentum and missing transverse momentum
+	fprintf(dest_file,"%30.20f",Lepdphimet);  //Lepdphimet - dphi between lepton and missing energy 
+	fprintf(dest_file,"%30.20f",Lepemv);     //Lepemv - output of electron discriminant, the closer to 1 the more likely to be an electron.
+
 	fprintf(dest_file,"%30.20f",Jetm);
 
 	fprintf(dest_file,"%30i",NJets);

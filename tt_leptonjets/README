@@ -1,0 +1,32 @@
+buildAll.sh
+	Builds all *.C files in this directory
+
+CreateMethodsTree.C
+	PARAMETERS: input_root_dataMC input_txt
+	Creates Rootfile, where it combines discriminant of the method and weights of the MC.
+	
+CreateMethodsTree.sh
+	loops over leptons and methods and executes CreateMethodsTree.C
+
+CutTree.C
+	PARAMETERS: input_root_file  output_root_file  cutString
+	Creates cut of tree 'nn_tree' from the input file and saves this new cut to the output file.
+	Provide full paths! 
+
+MatchMethodsTree.C
+MatchMethodsTree.sh
+MergeMethodsTree.C
+MergeMethodsTree.sh
+
+Split_samples_2jetbin_2sets.sh
+	PARAMETERS: none
+	Uses CutTree.C
+Txt2Root.C
+Txt2Root.sh
+
+
+TODO:
+	spustit SPLIT na Michalovi Results -> 	muzu delit train, test, yield, 2jet, 3jet, 4+jet
+											vykreslit pro jednotlive sety
+											
+	spustit tmva, stmva

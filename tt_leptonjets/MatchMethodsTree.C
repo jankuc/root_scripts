@@ -46,7 +46,7 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
   char     *channel_types[]   =  {"ttA_172/D"};
   Float_t   max_disc[]        =  {0};
   Double_t  disc;
-  std::vector<Double_t> channels[1];
+  vector<Double_t> channels[1];
   //std::string nazevpromenne[3], - pole 3 stringu
   // create output branches
   t_output->Branch("Weight",         &Weight,         "Weight/D");
@@ -59,9 +59,9 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
 
   // control input paths, find maximal discriminants, compare number of events
   for (Int_t i = 0; source_channel[i]; i++){
-      std::ifstream indata(source_channel[i]);
+      ifstream indata(source_channel[i]);
       if (!indata || !indata.is_open())
-        throw std::runtime_error("unable to open input file: "+std::string(source_channel[i]));
+        throw runtime_error("unable to open input file: "+string(source_channel[i]));
       while (true){
           indata >> disc;
           if (!indata) break;
@@ -73,7 +73,7 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
       if (n_events_original != n_events[i]){
           cout << "pocet v source:" <<  n_events_original << endl;
           cout << "pocet v " << i << "-tem kanalu:" <<  n_events[i] << endl;
-          throw std::runtime_error("Number of events in the discriminant file differs from number of Weights in the source file: " + std::string(source_channel[i]));
+          throw runtime_error("Number of events in the discriminant file differs from number of Weights in the source file: " + string(source_channel[i]));
         }
     }
 
@@ -106,7 +106,7 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
   //                    NULL};
   //
   //   TTree t; // reference to a Tree
-  //   t.ReadFile("values.txt", "a:b");
+  //   t.ReadFile("values.txt
 
   for (Int_t i = 0; channel_names[i]; i++){
       // one way ReadFile(const source_channel[i], const char* branchDescriptor = "x/D")
@@ -134,7 +134,7 @@ void  CreateMethodsTree(char *source_main = "colTree.root", char *source_channel
 int main(int argc, char** argv)
 {
   if (argc < 5){
-      std::cout << "Usage: " << argv[0] << "source_main source_channel1 methods destination_path" << std::endl;
+      cout << "Usage: " << argv[0] << "source_main source_channel1 methods destination_path" << endl;
       exit(1);
     }
 
