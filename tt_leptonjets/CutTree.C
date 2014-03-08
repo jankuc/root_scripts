@@ -23,12 +23,13 @@ using namespace std;
   output_root_file    *.root full output path of one of channels (QCD, data, Wlp, ...)
   cutString           string which will be used for cutting the tree eg. "val==1"
 */
-void  cutTree(char *input_root_file, char *output_root_file, char *cutString){
+void  cutTree(char *input_root_file, char *output_root_file, char *cutString, char *tree_name){
 
   TFile *f_source = new TFile(input_root_file, "READ");
   TFile *f_output = new TFile(output_root_file, "RECREATE");
 
-  TTree *t_source = (TTree *) f_source->Get("nn_tree");
+  TTree *t_source = (TTree *) f_source->Get(tree_name);
+  cout<<"Cut string: "<<cutString<<endl;
   TTree *t_output = t_source->CopyTree(cutString);
 
   t_output->Write();
@@ -40,12 +41,12 @@ void  cutTree(char *input_root_file, char *output_root_file, char *cutString){
 #ifndef __CINT__
 int main(int argc, char** argv)
 {
-  if (argc < 3){
-      cout << "Usage: " << argv[0] << "input_root_file output_root_file cutString" << endl;
+  if (argc < 5){
+      cout << "Usage: " << argv[0] << "input_root_file output_root_file cutString tree_name" << endl;
       exit(1);
     }
 
-  cutTree(argv[1], argv[2], argv[3]);
+  cutTree(argv[1], argv[2], argv[3], argv[4]);
   return 0;
 }
 #endif

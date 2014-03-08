@@ -1,0 +1,15 @@
+#!/bin/sh
+
+source /usr/local/bin/clued0_setup.sh
+
+setup ld v2_16_1
+setup gcc v3_4_3_glibc_232_dzero
+setup python v2_6_4
+setup gsl v1_11_lts3
+
+export ROOTSYS=/rooms/prague/vokac/apps/root_v5_34_07-GCC_3_4_3-python-2_6-TMVA_My-slf5
+export PATH=$ROOTSYS/bin:$PATH
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/rooms/prague/vokac/mj/work/vjets_cafe-v05-07-23-devel-201303.current/top_multijet/scripts:$ROOTSYS/lib:/rooms/prague/vokac/apps/pyminuit2-1.1.0/lib-root_v5_34_03-GCC_3_4_3-python-2_6-TMVA-slf5:${PYTHONPATH}
+export ROOTENV_NO_HOME=1
+

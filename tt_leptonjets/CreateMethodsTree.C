@@ -46,7 +46,11 @@ void CreateMethodsTree(char *source_main = "colTree.root",
 
     //declare variables and get pointers to required original variables from source tree
     Float_t Weight;
+    Int_t type, val, NJets; // we will need it because of splitting the samples to many.
     t_source->SetBranchAddress("Weight", &Weight);
+    t_source->SetBranchAddress("type", &type);
+    t_source->SetBranchAddress("val", &val);
+    t_source->SetBranchAddress("NJets", &NJets);
     //Double_t HT_AllJetsLeptonMET; 		t_source->SetBranchAddress("HT_AllJetsLeptonMET", &HT_AllJetsLeptonMET);
     //Char_t    MCkey[MCkeylength]; 		t_source->SetBranchAddress("MCkey[MCkeylength]", &MCkey[MCkeylength]);
 
@@ -64,6 +68,9 @@ void CreateMethodsTree(char *source_main = "colTree.root",
 
     // create output branches
     t_output->Branch("Weight", &Weight, "Weight/D");
+    t_output->Branch("type", &type, "type/I");
+    t_output->Branch("val", &val, "val/I");
+    t_output->Branch("NJets", &NJets, "NJets/I");
 
     //t_output->Branch(channel_names[i].c_str(),   &s,   string(channel_names[i]+"/D").c_str());
     for (Int_t i = 0; channel_names[i]; i++) {

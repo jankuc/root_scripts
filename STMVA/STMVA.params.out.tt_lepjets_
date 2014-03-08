@@ -1,0 +1,240 @@
+# paths to ROOT files with TopologicalVariables trees
+# MUON
+TrainingPath: /work/budvar-clued0/francji/subsets/small_training_sample/
+TestingPath:  /work/budvar-clued0/francji/subsets/testing_sample/
+YieldsPath:   /work/budvar-clued0/francji/subsets/yield_sample/
+DataPath:     /work/budvar-clued0/francji/subsets/yield_sample/
+
+# filename prefix/suffix for input root files
+#TrainingFilePrefix: p17_CC_
+#TrainingFileSuffix: _miniTree.root
+#TestingFilePrefix: p17_CC_
+#TestingFileSuffix: _zero_Topo_testing_sample.root
+#YieldsFilePrefix: p17_CC_
+#YieldsFileSuffix: _zero_Topo_yield_sample.root
+#DataFilePrefix: p17_CC_
+#DataFileSuffix: _zero_Topo_yield_sample.root
+
+# TMVA output file
+OutputPath: /work/budvar-clued0/francji/results/STMVA/
+OutputName: STMVA.EqOneTag_EqThreeJet_tb.root
+
+# tree name in input ROOT files
+TreeName: TopologicalVariables
+
+# channel - JetBin \in (EqTwoJet, EqThreeJet), TagBin \in (EqOneTag, EqTwoTag)
+TagBin: EqOneTag
+JetBin: EqThreeJet
+
+# signal and background samples
+Samples: diboson QCD tb tqb ttbar-dilepton ttbar-lepjets wbb wcc wlp zbb zcc zlp
+Samples: data QCD Wlp Wcc Wbb ZbbMuMu ZbbTauTau ZccMuMu ZccTauTau ZlpMuMu ZlpTauTau tb tqb WW WZ ZZ ttAll_172 ttA_172
+
+#Samples ele: data QCD Wlp Wcc Wbb ZbbEE ZbbTauTau ZccEE ZccTauTau ZlpEE ZlpTauTau tb tqb WW WZ ZZ ttAll_172 ttA_172
+
+Signals: tb
+
+# variables used to build discriminant
+EventWeight: EventWeight
+Variable: SecondLightQuarkJetBTagMVA/D Cos_Jet1Lepton_Lab/D DeltaPhiJet2MET/D Jet1Mass/D Jet2Pt/D Centrality_AllJets/D LeadingLightQuarkJetE/D DeltaRMinLeptonJet/D HT_AllJetsLeptonMET/D InvariantMass_Jet1Jet2/D DeltaPhiLeptonMET/D LeadingLightQuarkJetLeptonDeltaPhi/D QTimesLeptonEta/D MostBLikeJetQTimesEta/D WPt/D Pt_Jet1Jet2/D WTransverseMass/D LeadingBTaggedJetLeptonDeltaPhi/D LeptonEta/D LeptonPt/D LeadingLightQuarkJetEta/D SecondLightQuarkJetEta/D HT_AllJets/D SecondLightQuarkJetPt/D LeadingBTaggedJetEta/D LeadingBTaggedJetPt/D METPt/D Jet2QTimesEta/D LeadingBTaggedJetBTagMVA/D LeadingLightQuarkJetBTagMVA/D DeltaPhiJet1MET/D LeadingLightQuarkJetPt/D DeltaRJet1Jet2/D HT_METlep/D Jet1QTimesEta/D LeadingLightQuarkJetMass/D Cos_Jet2Lepton_Lab/D QTimesEta/D
+# Variable: Apla/F Spher/F HTL/F JetMt/F HT3/F MEvent/F MT1NL/F M01mall/F M0nl/F M1nl/F Mt0nl/F Met/F Mtt/F Mva_max/F Wmt/F Wpt/F Centr/F DRminejet/F DiJetDrmin/F Ht/F Ht20/F Ktminp/F Lepdphimet/F Lepemv/F
+# TMVA methods
+Method: GLM MBC BNN BDT
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+GLM.Type:         TMVA::Types::kExternal
+GLM.Params:       H:!V:VerbosityLevel=Debug
+GLM.TreeName:     GLM
+GLM.LeaveName:    tb
+GLM.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/GLM
+GLM.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/GLM
+GLM.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/GLM
+GLM.DataPath:     /work/budvar-clued0/francji/results/yield_sample/GLM
+#GLM.TrainingFilePrefix: p17_CC_
+GLM.TrainingFileSuffix: _zero_small_training_sample.root
+#GLM.TestingFilePrefix: p17_CC_
+GLM.TestingFileSuffix: _zero_testing_sample.root
+#GLM.YieldsFilePrefix: p17_CC_
+GLM.YieldsFileSuffix: _zero_yield_sample.root
+#GLM.DataFilePrefix: p17_CC_
+GLM.DataFileSuffix: _zero_yield_sample.root
+
+MBC.Type:         TMVA::Types::kExternal
+MBC.Params:       H:!V:VerbosityLevel=Debug
+MBC.TreeName:     MBC
+MBC.LeaveName:    tb
+MBC.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/MBC
+MBC.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/MBC
+MBC.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/MBC
+MBC.DataPath:     /work/budvar-clued0/francji/results/yield_sample/MBC
+#MBC.TrainingFilePrefix: p17_CC_
+MBC.TrainingFileSuffix: _zero_small_training_sample.root
+#MBC.TestingFilePrefix: p17_CC_
+MBC.TestingFileSuffix: _zero_testing_sample.root
+#MBC.YieldsFilePrefix: p17_CC_
+MBC.YieldsFileSuffix: _zero_yield_sample.root
+#MBC.DataFilePrefix: p17_CC_
+MBC.DataFileSuffix: _zero_yield_sample.root
+
+
+NNSU.Type:         TMVA::Types::kExternal
+NNSU.Params:       H:!V:VerbosityLevel=Debug
+NNSU.TreeName:     NNSU
+NNSU.LeaveName:    tb
+NNSU.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/NNSU
+NNSU.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/NNSU
+NNSU.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/NNSU
+NNSU.DataPath:     /work/budvar-clued0/francji/results/yield_sample/NNSU
+#NNSU.TrainingFilePrefix: p17_CC_
+NNSU.TrainingFileSuffix: _zero_small_training_sample.root
+#NNSU.TestingFilePrefix: p17_CC_
+NNSU.TestingFileSuffix: _zero_testing_sample.root
+#NNSU.YieldsFilePrefix: p17_CC_
+NNSU.YieldsFileSuffix: _zero_yield_sample.root
+#NNSU.DataFilePrefix: p17_CC_
+NNSU.DataFileSuffix: _zero_yield_sample.root
+
+
+SVM.Type:         TMVA::Types::kExternal
+SVM.Params:       H:!V:VerbosityLevel=Debug
+SVM.TreeName:     SVM
+SVM.LeaveName:    tb
+SVM.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/SVM
+SVM.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/SVM
+SVM.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/SVM
+SVM.DataPath:     /work/budvar-clued0/francji/results/yield_sample/SVM
+#SVM.TrainingFilePrefix: p17_CC_
+SVM.TrainingFileSuffix: _zero_small_training_sample.root
+#SVM.TestingFilePrefix: p17_CC_
+SVM.TestingFileSuffix: _zero_testing_sample.root
+#SVM.YieldsFilePrefix: p17_CC_
+SVM.YieldsFileSuffix: _zero_yield_sample.root
+#SVM.DataFilePrefix: p17_CC_
+SVM.DataFileSuffix: _zero_yield_sample.root
+
+
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+D0_MED.Type:         TMVA::Types::kExternal
+D0_MED.Params:       H:!V:VerbosityLevel=Debug
+D0_MED.TreeName:     D0_MED
+D0_MED.LeaveName:    tb
+D0_MED.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/D0_MED
+D0_MED.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/D0_MED
+D0_MED.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/D0_MED
+D0_MED.DataPath:     /work/budvar-clued0/francji/results/yield_sample/D0_MED
+#D0_MED.TrainingFilePrefix: p17_CC_
+D0_MED.TrainingFileSuffix: _zero_small_training_sample.root
+#D0_MED.TestingFilePrefix: p17_CC_
+D0_MED.TestingFileSuffix: _zero_testing_sample.root
+#D0_MED.YieldsFilePrefix: p17_CC_
+D0_MED.YieldsFileSuffix: _zero_yield_sample.root
+#D0_MED.DataFilePrefix: p17_CC_
+D0_MED.DataFileSuffix: _zero_yield_sample.root
+
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+D0_BNN.Type:         TMVA::Types::kExternal
+D0_BNN.Params:       H:!V:VerbosityLevel=Debug
+D0_BNN.TreeName:     D0_BNN
+D0_BNN.LeaveName:    tb
+D0_BNN.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/D0_BNN
+D0_BNN.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/D0_BNN
+D0_BNN.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/D0_BNN
+D0_BNN.DataPath:     /work/budvar-clued0/francji/results/yield_sample/D0_BNN
+#D0_BNN.TrainingFilePrefix: p17_CC_
+D0_BNN.TrainingFileSuffix: _zero_small_training_sample.root
+#D0_BNN.TestingFilePrefix: p17_CC_
+D0_BNN.TestingFileSuffix: _zero_testing_sample.root
+#D0_BNN.YieldsFilePrefix: p17_CC_
+D0_BNN.YieldsFileSuffix: _zero_yield_sample.root
+#D0_BNN.DataFilePrefix: p17_CC_
+D0_BNN.DataFileSuffix: _zero_yield_sample.root
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+D0_DT.Type:         TMVA::Types::kExternal
+D0_DT.Params:       H:!V:VerbosityLevel=Debug
+D0_DT.TreeName:     D0_DT
+D0_DT.LeaveName:    tb
+D0_DT.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/D0_DT
+D0_DT.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/D0_DT
+D0_DT.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/D0_DT
+D0_DT.DataPath:     /work/budvar-clued0/francji/results/yield_sample/D0_DT
+#D0_DT.TrainingFilePrefix: p17_CC_
+D0_DT.TrainingFileSuffix: _zero_small_training_sample.root
+#D0_DT.TestingFilePrefix: p17_CC_
+D0_DT.TestingFileSuffix: _zero_testing_sample.root
+#D0_DT.YieldsFilePrefix: p17_CC_
+D0_DT.YieldsFileSuffix: _zero_yield_sample.root
+#D0_DT.DataFilePrefix: p17_CC_
+D0_DT.DataFileSuffix: _zero_yield_sample.root
+
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+D0_BNNComb.Type:         TMVA::Types::kExternal
+D0_BNNComb.Params:       H:!V:VerbosityLevel=Debug
+D0_BNNComb.TreeName:     D0_BNNComb
+D0_BNNComb.LeaveName:    tb
+D0_BNNComb.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/D0_BNNComb
+D0_BNNComb.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/D0_BNNComb
+D0_BNNComb.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/D0_BNNComb
+D0_BNNComb.DataPath:     /work/budvar-clued0/francji/results/yield_sample/D0_BNNComb
+#D0_BNNComb.TrainingFilePrefix: p17_CC_
+D0_BNNComb.TrainingFileSuffix: _zero_small_training_sample.root
+#D0_BNNComb.TestingFilePrefix: p17_CC_
+D0_BNNComb.TestingFileSuffix: _zero_testing_sample.root
+#D0_BNNComb.YieldsFilePrefix: p17_CC_
+D0_BNNComb.YieldsFileSuffix: _zero_yield_sample.root
+#D0_BNNComb.DataFilePrefix: p17_CC_
+D0_BNNComb.DataFileSuffix: _zero_yield_sample.root
+
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+BDT.Type:         TMVA::Types::kExternal
+BDT.Params:       H:!V:VerbosityLevel=Debug
+BDT.TreeName:     BDT
+BDT.LeaveName:    tb
+BDT.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/BDT
+BDT.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/BDT
+BDT.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/BDT
+BDT.DataPath:     /work/budvar-clued0/francji/results/yield_sample/BDT
+#BDT.TrainingFilePrefix: p17_CC_
+BDT.TrainingFileSuffix: _zero_small_training_sample.root
+#BDT.TestingFilePrefix: p17_CC_
+BDT.TestingFileSuffix: _zero_testing_sample.root
+#BDT.YieldsFilePrefix: p17_CC_
+BDT.YieldsFileSuffix: _zero_yield_sample.root
+#BDT.DataFilePrefix: p17_CC_
+BDT.DataFileSuffix: _zero_yield_sample.root
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+BNN.Type:         TMVA::Types::kExternal
+BNN.Params:       H:!V:VerbosityLevel=Debug
+BNN.TreeName:     BNN
+BNN.LeaveName:    tb
+BNN.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/BNN
+BNN.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/BNN
+BNN.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/BNN
+BNN.DataPath:     /work/budvar-clued0/francji/results/yield_sample/BNN
+#BNN.TrainingFilePrefix: p17_CC_
+BNN.TrainingFileSuffix: _zero_small_training_sample.root
+#BNN.TestingFilePrefix: p17_CC_
+BNN.TestingFileSuffix: _zero_testing_sample.root
+#BNN.YieldsFilePrefix: p17_CC_
+BNN.YieldsFileSuffix: _zero_yield_sample.root
+#BNN.DataFilePrefix: p17_CC_
+BNN.DataFileSuffix: _zero_yield_sample.root

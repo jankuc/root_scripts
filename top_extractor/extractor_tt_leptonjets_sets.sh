@@ -25,13 +25,13 @@ set=(train test yield data)
 
 for lepton in ele muo; do
 	echo $lepton
-	inPath=${input_root_files_path}/${lepton}
+	inPath=${input_root_files_path}
     for jetBin in 2 3 4; do
 		echo "----JetBin=$jetBin"
 		for setI in 0 1 2 3; do
 			echo "    ${set[$setI]}"
-			for rootFile in ${inPath}/${jetBin}jet/${set[$setI]}/*.root; do
-				outPath=${output_txt_files_path}/${lepton}/${jetBin}jet/${set[$setI]}/$(basename ${rootFile/.root/})
+			for rootFile in ${inPath}/${set[$setI]}/${lepton}/${jetBin}jet/*.root; do
+				outPath=${output_txt_files_path}/${set[$setI]}/${lepton}/${jetBin}jet/$(basename ${rootFile/.root/})
 				mkdir -p $(dirname $outPath)
 				if [ $setI -lt 3 -a "$(basename $rootFile)" != "data_miniTree.root" ]; then
 					# for train, test, yield we parse everything but data

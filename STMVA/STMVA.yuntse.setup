@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#!/bin/csh
+
+setup d0tools
+setup D0RunII p21.21.00 -O SRT_QUAL=maxopt
+d0setwa
+setup d0cvs
+setup caf_tools -t
+setup g77 v3_4_4_dzero_so
+# GP removed for test; D0RunII sets up v4-0-3
+# setup TMVA v04-01-00
+
+export LINK_SHARED=yes
+export PATH=${SRT_PRIVATE_CONTEXT}/shbin/${SRT_SUBDIR}/:${PATH}
+
+
+source /usr/local/bin/clued0_setup.sh
+
+setup ld v2_16_1
+setup gcc v3_4_3_glibc_232_dzero
+setup python v2_6_4
+setup gsl v1_11_lts3
+
+export ROOTSYS=/rooms/prague/vokac/apps/root_v5_34_06-GCC_3_4_3-python-2_6-TMVA_My-slf5
+export PATH=$ROOTSYS/bin:$PATH
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/rooms/prague/vokac/mj/work/vjets_cafe-v05-07-23-devel-201303.current/top_multijet/scripts:$ROOTSYS/lib:/rooms/prague/vokac/apps/pyminuit2-1.1.0/lib-root_v5_34_03-GCC_3_4_3-python-2_6-TMVA-slf5:${PYTHONPATH}
+export ROOTENV_NO_HOME=1
+
