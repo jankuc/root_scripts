@@ -143,7 +143,8 @@ STMVAConfig::STMVAConfig(const char *filename) {
       _methodsYieldsSignals[method] = getInputPaths("YieldsPath["+method+"]", yieldsPath, methodYieldsFilePrefix, methodYieldsFileSuffix, true);
       _methodsYieldsBackgrounds[method] = getInputPaths("YieldsPath["+method+"]", yieldsPath, methodYieldsFilePrefix, methodYieldsFileSuffix, false);
       std::vector<std::string> methodsDataPaths = getInputPaths("DataPath["+method+"]", dataPath, methodDataFilePrefix, methodDataFileSuffix, false);
-
+      
+      
       checkMethodsInputs("TrainingSignals["+method+"]", _trainingSignals, _methodsTrainingSignals[method], _treeName, methodTreeName, methodLeaveName);
       checkMethodsInputs("TrainingBackgrounds["+method+"]", _trainingBackgrounds, _methodsTrainingBackgrounds[method], _treeName, methodTreeName, methodLeaveName);
       checkMethodsInputs("TestingSignals["+method+"]", _testingSignals, _methodsTestingSignals[method], _treeName, methodTreeName, methodLeaveName);

@@ -37,8 +37,8 @@ for line in open(INPUT).readlines():
 if not os.path.exists('params'):
     os.mkdir('params')
 
-VARIABLES_2 = ["Apla", "Spher", "HTL", "JetMt", "MEvent", "MT1NL", "M01mall", "M0nl", "M1nl", "Mt0nl", "Met", "Mtt", "Mva_max", "Wmt", "Wpt", "Centr", "DRminejet", "DiJetDrmin", "Ht", "Ht20", "Ktminp", "Lepdphimet", "Lepemv"]
-VARIABLES_34 = ["Apla", "Spher", "HTL", "JetMt", "HT3", "MEvent", "MT1NL", "M01mall", "M0nl", "M1nl", "Mt0nl", "Met", "Mtt", "Mva_max", "Wmt", "Wpt", "Centr", "DRminejet", "DiJetDrmin", "Ht", "Ht20", "Ktminp", "Lepdphimet", "Lepemv"]
+VARIABLES_2 = ["Apla", "Spher", "HTL", "JetMt", "MEvent", "MT1NL", "M01mall", "M0nl", "M1nl", "MT0nl", "Met", "Mtt", "Mva_max", "Wmt", "Wpt", "Centr", "DRminejet", "DiJetDrmin", "Ht", "Ht20", "Ktminp", "Lepdphimet", "Lepemv"]
+VARIABLES_34 = ["Apla", "Spher", "HTL", "JetMt", "HT3", "MEvent", "MT1NL", "M01mall", "M0nl", "M1nl", "MT0nl", "Met", "Mtt", "Mva_max", "Wmt", "Wpt", "Centr", "DRminejet", "DiJetDrmin", "Ht", "Ht20", "Ktminp", "Lepdphimet", "Lepemv"]
 
 
 
