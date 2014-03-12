@@ -15,6 +15,7 @@
 //#include <TRandom.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "TSystem.h"
 
 
 #endif 
@@ -22,7 +23,8 @@
 void getNEntries(char* fileName, char* treeName) {
     TFile *f = new TFile(fileName);
     TTree *t = (TTree*) f->Get(treeName);
-    std::cout<<f->GetTi()<< ": " << t->GetEntries()<<std::endl;
+    TSystem s;
+    std::cout<< s.BaseName(f->GetName())<< ": " << t->GetEntries()<<std::endl;
 }
 
 
