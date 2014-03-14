@@ -52,6 +52,16 @@
 #include "STMVAConfig.h"
 //#include "ZDeflate.h"
 
+struct type_and_val {
+    char type; // is 'I', 'D' or 'F'
+
+    union {
+        Int_t I;
+        Double_t D;
+        Float_t F;
+    } val;
+};
+
 void STMVA(char *params) {
     STMVAConfig config(params);
     config.dump();
@@ -90,52 +100,34 @@ void STMVA(char *params) {
             factory->AddSpectator(varName.c_str(), 'F');
     }
 
-    TChain signal(config.treeName().c_str());
-    TChain background(config.treeName().c_str());
-    
+
+
+    //    // Old version
+    //    // BEGIN
+
+    TChain sigTr(config.treeName().c_str());
+    TChain sigTe(config.treeName().c_str());
+    TChain backTr(config.treeName().c_str());
+    TChain backTe(config.treeName().c_str());
+
     // training data
     for (std::vector<std::string>::const_iterator it = config.trainingSignals().begin();
             it != config.trainingSignals().end(); ++it)
-        signal.Add((*it).c_str());
+        sigTr.Add((*it).c_str());
     for (std::vector<std::string>::const_iterator it = config.trainingBackgrounds().begin();
             it != config.trainingBackgrounds().end(); ++it)
-        background.Add((*it).c_str());
-    
-    Int_t nTrainingSignals = signal.GetEntries();
-    Int_t nTrainingBackgrounds = background.GetEntries();
-    
+        backTr.Add((*it).c_str());
+
     // testing data
     for (std::vector<std::string>::const_iterator it = config.testingSignals().begin();
             it != config.testingSignals().end(); ++it)
-        signal.Add((*it).c_str());
+        sigTe.Add((*it).c_str());
     for (std::vector<std::string>::const_iterator it = config.testingBackgrounds().begin();
             it != config.testingBackgrounds().end(); ++it)
-        background.Add((*it).c_str());
-    Int_t nTestingSignals = 0;//signal.GetEntries() - nTrainingSignals;
-    Int_t nTestingBackgrounds = 0;//background.GetEntries() - nTrainingBackgrounds;
+        backTe.Add((*it).c_str());
 
-    std::cout << "nTrainingSignals: " << nTrainingSignals << std::endl;
-    std::cout << "nTestingSignals: " << nTestingSignals << std::endl;
+    // END
 
-    std::cout << "nTrainingBack: " << nTrainingBackgrounds << std::endl;
-    std::cout << "nTestingBack: " << nTestingBackgrounds << std::endl;
-
-    std::cout << "nSignalAll: " << signal.GetEntries() << std::endl;
-    std::cout << "nBackgroundAll: " << background.GetEntries() << std::endl;
-    
-    // NANs
-//    char* cutString = "Wmt>0";
-//    TTree *tCutSignal =  signal.CopyTree(cutString);
-//    tCutSignal->Write();
-//    TTree *tCutBackground = background.CopyTree(cutString);
-//    tCutBackground->Write();
-//
-//    std::cout << "nSignalAll_withoutNANs: " << tCutSignal->GetEntries() << std::endl;
-//    std::cout << "nBackgroundAll_withoutNANs: " << tCutBackground->GetEntries() << std::endl;
-    
-    
-
-    
     // yields data
     //for (std::vector<std::string>::const_iterator it = config.yieldsSignals().begin();
     //     it != config.yieldsSignals().end(); ++it)
@@ -147,37 +139,42 @@ void STMVA(char *params) {
     //Int_t nYieldsBackgrounds = background.GetEntries() - nTrainingBackgrounds - nTestingBackgrounds;
 
     // add friends for external methods
-    std::map<std::string, TChain *> methodSignal;
-    std::map<std::string, TChain *> methodBackground;
+    std::map<std::string, TChain *> methodSigTr;
+    std::map<std::string, TChain *> methodSigTe;
+    std::map<std::string, TChain *> methodBackTr;
+    std::map<std::string, TChain *> methodBackTe;
     for (std::vector<std::string>::const_iterator it = config.methods().begin();
             it != config.methods().end(); ++it) {
         std::string method(*it);
         if (config.methodType(method) != TMVA::Types::kExternal)
             continue;
-        methodSignal[method] = new TChain(config.methodTreeName(method).c_str());
-        methodBackground[method] = new TChain(config.methodTreeName(method).c_str());
+
+        methodSigTr[method] = new TChain(config.methodTreeName(method).c_str());
+        methodSigTe[method] = new TChain(config.methodTreeName(method).c_str());
+        methodBackTr[method] = new TChain(config.methodTreeName(method).c_str());
+        methodBackTe[method] = new TChain(config.methodTreeName(method).c_str());
 
         //config.methodTreeName(method);
         //config.methodLeaveName(method);
         //config.methodTrainingSignals(method);
 
-        
-        
+
+
         // training data
         for (std::vector<std::string>::const_iterator it = config.methodTrainingSignals(method).begin();
                 it != config.methodTrainingSignals(method).end(); ++it)
-            methodSignal[method]->Add((*it).c_str());
+            methodSigTr[method]->Add((*it).c_str());
         for (std::vector<std::string>::const_iterator it = config.methodTrainingBackgrounds(method).begin();
                 it != config.methodTrainingBackgrounds(method).end(); ++it)
-            methodBackground[method]->Add((*it).c_str());
+            methodBackTr[method]->Add((*it).c_str());
 
         // testing data
         for (std::vector<std::string>::const_iterator it = config.methodTestingSignals(method).begin();
                 it != config.methodTestingSignals(method).end(); ++it)
-            methodSignal[method]->Add((*it).c_str());
+            methodSigTe[method]->Add((*it).c_str());
         for (std::vector<std::string>::const_iterator it = config.methodTestingBackgrounds(method).begin();
                 it != config.methodTestingBackgrounds(method).end(); ++it)
-            methodBackground[method]->Add((*it).c_str());
+            methodBackTe[method]->Add((*it).c_str());
 
         // yields data
         //for (std::vector<std::string>::const_iterator it = config.methodYieldsSignals(method).begin();
@@ -187,14 +184,10 @@ void STMVA(char *params) {
         //     it != config.methodYieldsBackgrounds(method).end(); ++it)
         //  methodBackground[method]->Add((*it).c_str());
 
-        //std::cout << "XXXXXXXXX " << method << std::endl;
-        //std::cout << "XXXXXXXXX " << config.methodTrainingSignals(method).size() << std::endl;
-        //std::cout << "XXXXXXXXX " << config.methodTrainingBackgrounds(method).size() << std::endl;
-        //std::cout << "XXXXXXXXX " << config.methodTestingSignals(method).size() << std::endl;
-        //std::cout << "XXXXXXXXX " << config.methodTestingBackgrounds(method).size() << std::endl;
-
-        signal.AddFriend(methodSignal[method]);
-        background.AddFriend(methodBackground[method]);
+        sigTr.AddFriend(methodSigTr[method]);
+        sigTe.AddFriend(methodSigTe[method]);
+        backTr.AddFriend(methodBackTr[method]);
+        backTe.AddFriend(methodBackTe[method]);
     }
 
     //std::cout << "Test: training(" << nTrainingSignals << "," << nTrainingBackgrounds << ")" << std::endl;
@@ -202,21 +195,229 @@ void STMVA(char *params) {
     //std::cout << "Test: yields(" << nYieldsSignals << "," << nYieldsBackgrounds << ")" << std::endl;
 
     // You can add an arbitrary number of signal or background trees
-    factory->AddSignalTree(&signal);
-    factory->AddBackgroundTree(&background);
 
-    // Set individual event weights (the variables must exist in the tree)
-    factory->SetBackgroundWeightExpression(config.eventWeight());
-    factory->SetSignalWeightExpression(config.eventWeight());
+    // NEW
+    // --- begin ----------------------------------------------------------
 
-    // Tell the factory how to use the training and testing events
-    std::ostringstream iss;
-    iss << "nTrain_Signal=" << nTrainingSignals << ":"
-            << "nTrain_Background=" << nTrainingBackgrounds << ":"
-            << "nTest_Signal=" << nTestingSignals << ":"
-            << "nTest_Background=" << nTestingBackgrounds << ":"
-            << "SplitMode=Block:NormMode=NumEvents:!V:VerboseLevel=Debug";
+    factory->AddSignalTree(&sigTr, 1.0, "Training" );
+    factory->AddSignalTree(&sigTe, 1.0, "Testing");
+    factory->AddBackgroundTree(&backTr, 1.0, "Training");
+    factory->AddBackgroundTree(&backTe, 1.0, "Testing");
+    factory->SetWeightExpression(config.eventWeight());
+    //factory->SetSignalWeightExpression(config.eventWeight());
+    //factory->SetBackgroundWeightExpression(config.eventWeight());
+    
+//    UInt_t nVarsAndSpects;
+//    nVarsAndSpects = config.variables().size() + config.spectators().size();
+//
+//    std::cout << "Number of Variables and Spectators: " << nVarsAndSpects << std::endl;
+//
+//    std::vector<type_and_val> varsAndSpects(nVarsAndSpects);
+//    std::vector<Double_t> varsAndSpectsDoubled(nVarsAndSpects); // vector has size of number of input variables
+//    std::vector<std::string> varsAndSpectsNames(nVarsAndSpects);
+//    Float_t weight;
+//    int i = 0;
+//
+//    for (std::vector<std::string>::const_iterator it = config.variables().begin();
+//            it != config.variables().end(); ++it) {
+//        std::string varName(*it);
+//        if (varName.size() > 2 && varName[varName.size() - 2] == '/') {
+//            varsAndSpects[i].type = varName[varName.size() - 1];
+//            varsAndSpectsNames[i] = varName.substr(0, varName.size() - 2);
+//        } else {
+//            varsAndSpects[i].type = 'F';
+//            varsAndSpectsNames[i] = varName;
+//        }
+//        sigTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        sigTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        backTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        backTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        i++;
+//    }
+//    // Add so-called "Spectator variables" (not used for training but will appear in final tree)
+//    for (std::vector<std::string>::const_iterator it = config.spectators().begin();
+//            it != config.spectators().end(); ++it) {
+//        std::string varName(*it);
+//        if (varName.size() > 2 && varName[varName.size() - 2] == '/') {
+//            varsAndSpects[i].type = varName[varName.size() - 1];
+//            varsAndSpectsNames[i] = varName.substr(0, varName.size() - 2);
+//        } else {
+//            varsAndSpects[i].type = 'F';
+//            varsAndSpectsNames[i] = varName;
+//        }
+//        sigTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        sigTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        backTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        backTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
+//        i++;
+//    }
+//    
+//    int added = 0;
+//
+//    // Signal
+//    sigTr.SetBranchAddress(config.eventWeight().c_str(), &weight);
+//    for (Long64_t i = 0; i < sigTr.GetEntries(); i++) {
+//        sigTr.GetEntry(i);
+//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
+//            switch (varsAndSpects[ivar].type) {
+//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
+//                    break;
+//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
+//                    break;
+//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
+//                    break;
+//            }
+//        }
+//        if (std::strcmp(config.lepton().c_str(), "ele")) {
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//        } else { // muo
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
+//                continue;
+//        }
+//        factory->AddSignalTrainingEvent(varsAndSpectsDoubled, weight);
+//        added++;
+//    }
+//    std::cout<< "Number of Signal Training events: " << added <<std::endl;
+//    added=0;
+//    sigTe.SetBranchAddress(config.eventWeight().c_str(), &weight);
+//    for (Long64_t i = 0; i < sigTe.GetEntries(); i++) {
+//        sigTe.GetEntry(i);
+//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
+//            switch (varsAndSpects[ivar].type) {
+//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
+//                    break;
+//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
+//                    break;
+//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
+//                    break;
+//            }
+//        }
+//        if (std::strcmp(config.lepton().c_str(), "ele")) {
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//        } else { // muo
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
+//                continue;
+//        }
+//        factory->AddSignalTestEvent(varsAndSpectsDoubled, weight);
+//        added++;
+//    }
+//
+//    // Background
+//    std::cout << "Number of Signal Testing events: " << added << std::endl;
+//    added = 0;
+//    backTr.SetBranchAddress(config.eventWeight().c_str(), &weight);
+//    for (Long64_t i = 0; i < backTr.GetEntries(); i++) {
+//        backTr.GetEntry(i);
+//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
+//            switch (varsAndSpects[ivar].type) {
+//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
+//                    break;
+//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
+//                    break;
+//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
+//                    break;
+//            }
+//        }
+//        if (std::strcmp(config.lepton().c_str(), "ele")) {
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//        } else { // muo
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
+//                continue;
+//        }
+//        factory->AddBackgroundTrainingEvent(varsAndSpectsDoubled, weight);
+//        added++;
+//    }
+//    std::cout << "Number of Background Training events: " << added << std::endl;
+//    added = 0;
+//    backTe.SetBranchAddress(config.eventWeight().c_str(), &weight);
+//    for (Long64_t i = 0; i < backTe.GetEntries(); i++) {
+//        backTe.GetEntry(i);
+//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
+//            switch (varsAndSpects[ivar].type) {
+//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
+//                    break;
+//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
+//                    break;
+//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
+//                    break;
+//            }
+//        }
+//        if (std::strcmp(config.lepton().c_str(), "ele")) {
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//        } else { // muo
+//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
+//                continue;
+//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
+//                continue;
+//        }
+//        factory->AddBackgroundTestEvent(varsAndSpectsDoubled, weight);
+//        added++;
+//    }
+//    std::cout << "Number of Background Testing events: " << added << std::endl;
+//    
+
+   
+    // --- end ------------------------------------------------------------
+
+
+
+    // OLD
+    // BEGIN
+    //    // Set individual event weights (the variables must exist in the tree)
+    //   
+    //    // Tell the factory how to use the training and testing events
+        std::ostringstream iss;
+        iss << "" //"nTrain_Signal=" << nTrainingSignals << ":"
+    //            << "nTrain_Background=" << nTrainingBackgrounds << ":"
+    //            << "nTest_Signal=" << nTestingSignals << ":"
+    //            << "nTest_Background=" << nTestingBackgrounds << ":"
+    //            << "SplitMode=Block:NormMode=NumEvents:
+                << "!V:VerboseLevel=Debug:NormMode=NumEvents";
     factory->PrepareTrainingAndTestTree("", "", iss.str());
+    // END
+
 
     // ---- Book MVA methods
     for (std::vector<std::string>::const_iterator it = config.methods().begin();

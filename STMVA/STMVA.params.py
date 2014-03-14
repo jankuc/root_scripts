@@ -15,7 +15,7 @@ CHANNELS = [
 
 SIGNALS = [ 'ttA_172', ]
 #METHODS = [ 'BNN', 'BDT', ]
-METHODS = [ 'MBC_50_20_MD_nT', ]
+METHODS = [ 'MBC_and_BDT' ]
 SAMPLES_MU = ["QCD","Wlp","Wcc","Wbb","ZbbMuMu","ZbbTauTau","ZccMuMu","ZccTauTau","ZlpMuMu","ZlpTauTau","tb","tqb","WW","WZ","ZZ","ttAll_172","ttA_172"] 
 SAMPLES_ELE = ["QCD","Wlp","Wcc","Wbb","ZbbEE","ZbbTauTau","ZccEE","ZccTauTau","ZlpEE","ZlpTauTau","tb","tqb","WW","WZ","ZZ","ttAll_172","ttA_172"]
 #EXTMET = [ 'GLM' ]

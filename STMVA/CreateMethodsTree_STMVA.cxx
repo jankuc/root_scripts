@@ -6,6 +6,11 @@
 //  ./STMVACreateMethodsTree STMVA.params input.root output.root
 // ----------------------------------------------------------------------
 
+//CreateMethodsTree.C
+//PARAMETERS:
+//input_root_dataMC input_txt
+//Creates Rootfile, where it combines discriminant of the method and weights of the MC.
+
 #if not defined(__CINT__) || defined(__MAKECINT__)
 // needs to be included when makecint runs (ACLIC)
 #include <stdexcept>

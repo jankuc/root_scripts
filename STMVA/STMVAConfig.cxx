@@ -250,6 +250,10 @@ void STMVAConfig::dump() {
       std::cout << "STMVAConfig." << method << ".TestingBackground: "; std::copy(_methodsTestingBackgrounds[method].begin(), _methodsTestingBackgrounds[method].end(), std::ostream_iterator<std::string>(std::cout, " ")); std::cout << std::endl;
       std::cout << "STMVAConfig." << method << ".YieldsSignal: "; std::copy(_methodsYieldsSignals[method].begin(), _methodsYieldsSignals[method].end(), std::ostream_iterator<std::string>(std::cout, " ")); std::cout << std::endl;
       std::cout << "STMVAConfig." << method << ".YieldsBackground: "; std::copy(_methodsYieldsBackgrounds[method].begin(), _methodsYieldsBackgrounds[method].end(), std::ostream_iterator<std::string>(std::cout, " ")); std::cout << std::endl;
+    } else {
+        std::cout << "STMVAConfig." << method << ".TrainingSignal: ";
+            std::copy(_methodsTrainingSignals[method].begin(), _methodsTrainingSignals[method].end(), std::ostream_iterator<std::string>(std::cout, " "));
+            std::cout << std::endl;
     }
   }
 }

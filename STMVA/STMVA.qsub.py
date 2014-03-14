@@ -12,7 +12,7 @@ CHANNELS = [
   ('ele', '3jet'),
   ('ele', '4jet'),
 ]
-SIGNALS = [ 'tb', 'tqb', 'tb tqb', ]
+SIGNALS = [ 'ttA_172', ]
 METHODS = [ 'BNN', 'BDT', ]
 
 q = open("qsub/qsub.sh", "w")
