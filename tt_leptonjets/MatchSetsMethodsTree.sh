@@ -2,9 +2,9 @@
 
 # Match individual methods root files together 
 
-input_rootfiles_path=/work/budvar-clued0/kuceraja/tt_leptonjets/samples_root_sets
-input_results_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root_sets
-output_results_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets
+input_rootfiles_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples_root_sets
+input_results_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_sets
+output_results_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets
 
 for set in train test yield data; do
 	echo $set

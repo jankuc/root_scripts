@@ -3,6 +3,10 @@
 //
 // To run use CreateMethodsTree.sh (sh CreateMethodsTree.sh)
 
+//CreateMethodsTree.C
+//PARAMETERS:
+//input_root_dataMC input_txt
+//Creates Rootfile, where it combines discriminant of the method and weights of the MC.
 
 #ifndef __CINT__
 // Include all needed headers here

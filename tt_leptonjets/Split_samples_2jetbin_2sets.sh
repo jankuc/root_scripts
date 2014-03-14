@@ -4,8 +4,8 @@
 # assumed input path: {input_root_files_path}/split_trees_3samples_${lepton}_1119 / {data, QCD, ...}_miniTree.root
 # for checking what output it generates, use echo instead of script path
  
-input_root_files_path=/work/budvar-clued0/kuceraja/tt_leptonjets/samples_root
-output_root_files_path=/work/budvar-clued0/kuceraja/tt_leptonjets/samples_root_sets
+input_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples_root
+output_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples_root_sets
 script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/tt_leptonjets/CutTree
 
 set=(train test yield data)

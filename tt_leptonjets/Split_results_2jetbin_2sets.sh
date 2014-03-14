@@ -4,15 +4,17 @@
 # assumed input path: {input_root_files_path}/${lepton} / {data, QCD, ...}_miniTree.root
 # for checking what output it generates, use echo instead of script path
  
-input_root_files_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root
-output_root_files_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root_sets
+input_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root
+output_root_files_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_sets
 script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/tt_leptonjets/CutTree
 
 set=(train test yield data)
 setCutString=("(val==1)" "(val==2)" "(val==0)&&(type<2)" "type==2")
 
 # methods are derived from CreateMethodsTree.sh
-for method in MBC_1_1_MD_noTransformation MBC_1_1_noTransformation MBC_50_20_MD_noTransformation ; do
+for method_path in ${input_root_files_path}/* ; do
+		method=$(basename $method_path)
+		echo $method
     for lepton in ele muo; do
         echo $lepton
         for jetBin in 2 3 4; do

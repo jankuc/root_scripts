@@ -29,7 +29,7 @@ void  cutTree(char *input_root_file, char *output_root_file, char *cutString, ch
   TFile *f_output = new TFile(output_root_file, "RECREATE");
 
   TTree *t_source = (TTree *) f_source->Get(tree_name);
-  cout<<"Cut string: "<<cutString<<endl;
+  cout<<"          Cut string: "<<cutString<<endl;
   TTree *t_output = t_source->CopyTree(cutString);
 
   t_output->Write();

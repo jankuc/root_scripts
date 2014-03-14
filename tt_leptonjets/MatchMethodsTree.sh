@@ -2,9 +2,9 @@
 
 # Match individual methods root files together 
 
-input_rootfiles_path=/work/budvar-clued0/kuceraja/tt_leptonjets/samples_root
-input_results_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root
-output_results_path=/work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched
+input_rootfiles_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/samples
+input_results_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root
+output_results_path=/work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched
 
 
 
