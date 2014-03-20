@@ -146,6 +146,7 @@ void STMVA(char *params) {
     for (std::vector<std::string>::const_iterator it = config.methods().begin();
             it != config.methods().end(); ++it) {
         std::string method(*it);
+        std::cout << "***** First method-cycle Method: " << method << std::endl;
         if (config.methodType(method) != TMVA::Types::kExternal)
             continue;
 
@@ -207,204 +208,6 @@ void STMVA(char *params) {
     //factory->SetSignalWeightExpression(config.eventWeight());
     //factory->SetBackgroundWeightExpression(config.eventWeight());
     
-//    UInt_t nVarsAndSpects;
-//    nVarsAndSpects = config.variables().size() + config.spectators().size();
-//
-//    std::cout << "Number of Variables and Spectators: " << nVarsAndSpects << std::endl;
-//
-//    std::vector<type_and_val> varsAndSpects(nVarsAndSpects);
-//    std::vector<Double_t> varsAndSpectsDoubled(nVarsAndSpects); // vector has size of number of input variables
-//    std::vector<std::string> varsAndSpectsNames(nVarsAndSpects);
-//    Float_t weight;
-//    int i = 0;
-//
-//    for (std::vector<std::string>::const_iterator it = config.variables().begin();
-//            it != config.variables().end(); ++it) {
-//        std::string varName(*it);
-//        if (varName.size() > 2 && varName[varName.size() - 2] == '/') {
-//            varsAndSpects[i].type = varName[varName.size() - 1];
-//            varsAndSpectsNames[i] = varName.substr(0, varName.size() - 2);
-//        } else {
-//            varsAndSpects[i].type = 'F';
-//            varsAndSpectsNames[i] = varName;
-//        }
-//        sigTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        sigTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        backTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        backTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        i++;
-//    }
-//    // Add so-called "Spectator variables" (not used for training but will appear in final tree)
-//    for (std::vector<std::string>::const_iterator it = config.spectators().begin();
-//            it != config.spectators().end(); ++it) {
-//        std::string varName(*it);
-//        if (varName.size() > 2 && varName[varName.size() - 2] == '/') {
-//            varsAndSpects[i].type = varName[varName.size() - 1];
-//            varsAndSpectsNames[i] = varName.substr(0, varName.size() - 2);
-//        } else {
-//            varsAndSpects[i].type = 'F';
-//            varsAndSpectsNames[i] = varName;
-//        }
-//        sigTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        sigTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        backTr.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        backTe.SetBranchAddress(varsAndSpectsNames[i].c_str(), &varsAndSpects[i].val);
-//        i++;
-//    }
-//    
-//    int added = 0;
-//
-//    // Signal
-//    sigTr.SetBranchAddress(config.eventWeight().c_str(), &weight);
-//    for (Long64_t i = 0; i < sigTr.GetEntries(); i++) {
-//        sigTr.GetEntry(i);
-//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
-//            switch (varsAndSpects[ivar].type) {
-//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
-//                    break;
-//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
-//                    break;
-//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
-//                    break;
-//            }
-//        }
-//        if (std::strcmp(config.lepton().c_str(), "ele")) {
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//        } else { // muo
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
-//                continue;
-//        }
-//        factory->AddSignalTrainingEvent(varsAndSpectsDoubled, weight);
-//        added++;
-//    }
-//    std::cout<< "Number of Signal Training events: " << added <<std::endl;
-//    added=0;
-//    sigTe.SetBranchAddress(config.eventWeight().c_str(), &weight);
-//    for (Long64_t i = 0; i < sigTe.GetEntries(); i++) {
-//        sigTe.GetEntry(i);
-//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
-//            switch (varsAndSpects[ivar].type) {
-//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
-//                    break;
-//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
-//                    break;
-//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
-//                    break;
-//            }
-//        }
-//        if (std::strcmp(config.lepton().c_str(), "ele")) {
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//        } else { // muo
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
-//                continue;
-//        }
-//        factory->AddSignalTestEvent(varsAndSpectsDoubled, weight);
-//        added++;
-//    }
-//
-//    // Background
-//    std::cout << "Number of Signal Testing events: " << added << std::endl;
-//    added = 0;
-//    backTr.SetBranchAddress(config.eventWeight().c_str(), &weight);
-//    for (Long64_t i = 0; i < backTr.GetEntries(); i++) {
-//        backTr.GetEntry(i);
-//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
-//            switch (varsAndSpects[ivar].type) {
-//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
-//                    break;
-//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
-//                    break;
-//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
-//                    break;
-//            }
-//        }
-//        if (std::strcmp(config.lepton().c_str(), "ele")) {
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//        } else { // muo
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
-//                continue;
-//        }
-//        factory->AddBackgroundTrainingEvent(varsAndSpectsDoubled, weight);
-//        added++;
-//    }
-//    std::cout << "Number of Background Training events: " << added << std::endl;
-//    added = 0;
-//    backTe.SetBranchAddress(config.eventWeight().c_str(), &weight);
-//    for (Long64_t i = 0; i < backTe.GetEntries(); i++) {
-//        backTe.GetEntry(i);
-//        for (int ivar = 0; ivar < varsAndSpects.size(); ivar++) {
-//            switch (varsAndSpects[ivar].type) {
-//                case 'F': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.F;
-//                    break;
-//                case 'I': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.I;
-//                    break;
-//                case 'D': varsAndSpectsDoubled[ivar] = (Double_t) varsAndSpects[ivar].val.D;
-//                    break;
-//            }
-//        }
-//        if (std::strcmp(config.lepton().c_str(), "ele")) {
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//        } else { // muo
-//            if (TMath::IsNaN(varsAndSpectsDoubled[14])) //Wmt
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[5]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[6]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[8]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[9]))
-//                continue;
-//            if (TMath::IsNaN(varsAndSpectsDoubled[10]))
-//                continue;
-//        }
-//        factory->AddBackgroundTestEvent(varsAndSpectsDoubled, weight);
-//        added++;
-//    }
-//    std::cout << "Number of Background Testing events: " << added << std::endl;
-//    
-
-   
-    // --- end ------------------------------------------------------------
-
-
-
-    // OLD
-    // BEGIN
     //    // Set individual event weights (the variables must exist in the tree)
     //   
     //    // Tell the factory how to use the training and testing events
@@ -416,16 +219,16 @@ void STMVA(char *params) {
     //            << "SplitMode=Block:NormMode=NumEvents:
                 << "!V:VerboseLevel=Debug:NormMode=NumEvents";
     factory->PrepareTrainingAndTestTree("", "", iss.str());
-    // END
-
 
     // ---- Book MVA methods
     for (std::vector<std::string>::const_iterator it = config.methods().begin();
             it != config.methods().end(); ++it) {
         std::string method(*it);
+        std::cout << "***** Method: " << method << std::endl;
         factory->BookMethod(config.methodType(method), method, config.methodParams(method));
     }
-
+    //std::cout << "***** Method: " << "BDT" << std::endl;
+    //factory->BookMethod(TMVA::Types::kBDT, "BDT", "!V:BoostType=Grad:nCuts=20:NNodesMax=5");
     // ---- Now you can tell the factory to train, test, and evaluate the MVAs
 
     // Train MVAs using the set of training events
@@ -436,6 +239,14 @@ void STMVA(char *params) {
 
     // ----- Evaluate and compare performance of all configured MVAs
     factory->EvaluateAllMethods();
+    
+//    for (std::vector<std::string>::const_iterator it = config.methods().begin();
+//            it != config.methods().end(); ++it) {
+//        std::string method(*it);
+//        if (strcmp(config.methodType(method) != TMVA::Types::kExternal ) { // Method isn't external, so we will 
+//            
+//        }
+//    }
 
     std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
     std::cout << "==> TMVAClassification is done!" << std::endl;

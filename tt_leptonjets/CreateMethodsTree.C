@@ -71,7 +71,7 @@ void CreateMethodsTree(char *source_main = "colTree.root",
     vector<Double_t> channels[1];
 
     // create output branches
-    t_output->Branch("Weight", &Weight, "Weight/D");
+    t_output->Branch("Weight", &Weight, "Weight/F");
     t_output->Branch("type", &type, "type/I");
     t_output->Branch("val", &val, "val/I");
     t_output->Branch("NJets", &NJets, "NJets/I");
@@ -88,6 +88,10 @@ void CreateMethodsTree(char *source_main = "colTree.root",
             throw runtime_error("unable to open input file: " + string(source_channel[i]));
         while (true) {
             indata >> disc;
+            
+            if (indata.fail()) {
+                throw runtime_error("Couldn't load line properly. " + (int) disc );
+            }
             if (!indata) break;
             channels[i].push_back(disc);
             n_events[i]++;
@@ -107,7 +111,7 @@ void CreateMethodsTree(char *source_main = "colTree.root",
     // main loop: record required values into given branches
     for (Int_t j = 0; j < n_events_original; j++) {
         for (Int_t i = 0; channel_names[i]; i++) {
-            channel_links[i] = (channels[i][j] - min_disc[i]) / (max_disc[i] - min_disc[i]);
+            channel_links[i] = 2 * (channels[i][j] - min_disc[i]) / (max_disc[i] - min_disc[i]) -1;
         }
         t_source -> GetEvent(j);
         t_output -> Fill();
@@ -119,7 +123,7 @@ void CreateMethodsTree(char *source_main = "colTree.root",
         char parameter[100], title[100];
         sprintf(parameter, "%s_%s", treeName, channel_names[i]);
         sprintf(title, "Weighted %s, separation method: %s", channel_names[i], treeName);
-        TH1F *hist = new TH1F(parameter, title, 31, 0, 1);
+        TH1F *hist = new TH1F(parameter, title, 50, 0, 1);
         // Double_t  Sum_Weight = 0;
         for (Int_t j = 0; j < n_events_original; j++) {
             t_output -> GetEvent(j);

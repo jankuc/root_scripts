@@ -26,6 +26,7 @@
 #endif
 
 #include "STMVAConfig.h"
+#include "TDirectoryFile.h"
 
 std::vector<double> STMVAEvaluate(const char *params, const char* input) {
   STMVAConfig config(params);
@@ -73,8 +74,6 @@ std::vector<double> STMVAEvaluate(const char *params, const char* input) {
   return ret;
 }
 
-
-
 #ifndef __CINT__
 int main(int argc, char** argv)
 {
@@ -87,14 +86,12 @@ int main(int argc, char** argv)
   // Call you script function
   //STMVAReader(argv[1], argv[2]);
   std::string filePref(argv[1]);
-  std::vector<double> tb_vector = STMVAEvaluate(std::string(filePref+"_tb").c_str(), "/work/budvar-clued0/francji/subsets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
-  std::vector<double> tqb_vector = STMVAEvaluate(std::string(filePref+"_tqb").c_str(), "/work/budvar-clued0/francji/subsets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
-  std::vector<double> tbtqb_vector = STMVAEvaluate(std::string(filePref+"_tbtqb").c_str(), "/work/budvar-clued0/francji/subsets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
+  std::vector<double> ttA_172_vector = STMVAEvaluate(std::string(filePref+"ttA_172").c_str(), "/work/budvar-clued0/fjfi-D0/tt_leptonjets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
+  //std::vector<double> tqb_vector = STMVAEvaluate(std::string(filePref+"_tqb").c_str(), "/work/budvar-clued0/francji/subsets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
+  //std::vector<double> tbtqb_vector = STMVAEvaluate(std::string(filePref+"_tbtqb").c_str(), "/work/budvar-clued0/francji/subsets/small_training_sample/p17_CC_diboson_EqOneTag_EqThreeJet_zero_Topo_small_training_sample.root");
 
-  for (size_t i = 0; i < tb_vector.size(); i++) {
-    double tb = tb_vector[i];
-    double tqb = tqb_vector[i];
-    double tbtqb = tbtqb_vector[i];
+  for (size_t i = 0; i < ttA_172_vector.size(); i++) {
+    double ttA_172 = ttA_172_vector[i];
     // fill TTree
   }
 

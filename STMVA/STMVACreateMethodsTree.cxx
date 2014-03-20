@@ -27,9 +27,19 @@
 
 #include "STMVAConfig.h"
 
+struct type_and_val {
+    char type; // is 'I', 'D' or 'F'
+
+    union {
+        Int_t I;
+        Double_t D;
+        Float_t F;
+    } val;
+};
+
 std::vector<double> STMVAEvaluate(const char *params,const char* input) {
   STMVAConfig config(params);
-  config.dump();
+  //config.dump();
 
   // join signal names without delimiter
   std::string sgn = std::accumulate(config.signals().begin(), config.signals().end(), std::string(""));
@@ -38,23 +48,51 @@ std::vector<double> STMVAEvaluate(const char *params,const char* input) {
   TMVA::Reader *reader = new TMVA::Reader();
 
   // root tree
-  TFile *f = new TFile(input);
-  TTree *t = (TTree*) f->Get(config.treeName().c_str());
+  TFile* f = new TFile(input);
+  TTree* treeWithNans = (TTree*) f->Get(config.treeName().c_str());
+  char * cutString = "Wmt>0";
+  
+  if (strcmp(config.lepton().c_str(), "ele")) {
+      cutString = "Wmt>0";
+  } else {
+      cutString = "(Wmt>0)&&(Wmt>0)"; //...
+  }
+  TTree* t = treeWithNans->CopyTree(cutString);
+  t->Write();
+  
+  
 
-  std::vector<float>  varsf(config.variables().size(), 0.);
-  std::vector<double> varsd(config.variables().size(), 0.);
+  std::vector<Float_t>  varsf(config.variables().size(), 0.);
+  std::vector<Double_t>  spectatorsd(config.spectators().size(), 0.);
+  std::vector<Float_t>  spectatorsf(config.spectators().size(), 0.);
 
   // create a set of variables and declare them to the reader
   //for (std::vector<std::string>::const_iterator it = config.variables().begin();
   //     it != config.variables().end(); ++it) {
-  //std::string varName(*it);
-  for (size_t i = 0; i < config.variables().size(); i++) {
-    std::string varName(config.variables()[i]);
-    if (!(varName.size() > 2 && varName[varName.size()-2] == '/' && varName[varName.size()-1] == 'D'))
-      throw std::runtime_error("currently this support only double variables, can't use "+varName);
-    t->SetBranchAddress(varName.substr(0, varName.size()-2).c_str(), &varsd[i]);
-    reader->AddVariable(varName.substr(0, varName.size()-2).c_str(), &varsf[i]);
-  }
+    //std::string varName(*it);
+    for (size_t i = 0; i < config.variables().size(); i++) {
+        std::string varName(config.variables()[i]);
+        if (!(varName.size() > 2 && varName[varName.size() - 2] == '/' && varName[varName.size() - 1] == 'F'))
+            throw std::runtime_error("currently this support only floats variables, can't use " + varName);
+        //t->SetBranchAddress(varName.substr(0, varName.size()-2).c_str(), &varsd[i]);
+        t->SetBranchAddress(varName.substr(0, varName.size() - 2).c_str(), &varsf[i]);
+        reader->AddVariable(varName.substr(0, varName.size() - 2).c_str(), &varsf[i]);
+    }
+  
+  for (size_t i = 0; i < config.spectators().size(); i++) {
+        std::string spectatorName(config.spectators()[i]);
+        if (!(spectatorName.size() > 2 && spectatorName[spectatorName.size() - 2] == '/' && spectatorName[spectatorName.size() - 1] == 'D')) {
+            t->SetBranchAddress(spectatorName.substr(0, spectatorName.size() - 2).c_str(), &spectatorsd[i]);
+            spectatorsf[i] = (Float_t) spectatorsd[i];
+        } else {
+            t->SetBranchAddress(spectatorName.substr(0, spectatorName.size() - 2).c_str(), &spectatorsf[i]);
+        }
+        if (std::strstr(spectatorName.c_str(), "/") == nullptr) {
+            reader->AddSpectator(spectatorName.c_str(), &spectatorsf[i]);
+        } else {
+            reader->AddSpectator(spectatorName.substr(0, spectatorName.size() - 2).c_str(), &spectatorsf[i]);
+        }
+    }
 
   std::string method(config.methods()[0]);
   reader->BookMVA(method, std::string(config.outputPath()+"/"+config.lepton()+"_"+config.jetBin()+"_"+sgn+"_"+method+".weights.xml").c_str());
@@ -62,7 +100,7 @@ std::vector<double> STMVAEvaluate(const char *params,const char* input) {
   std::vector<double> ret;
   for (Long64_t ievt=0; ievt < t->GetEntries(); ievt++) {
     t->GetEntry(ievt);
-    std::copy(varsd.begin(), varsd.end(), varsf.begin());
+    //std::copy(varsd.begin(), varsd.end(), varsf.begin());
     //std::cout << "EvaluateMVA\t" << reader->EvaluateMVA(method) << std::endl;
     ret.push_back(reader->EvaluateMVA(method));
   }
@@ -72,7 +110,7 @@ std::vector<double> STMVAEvaluate(const char *params,const char* input) {
   return ret;
 }
 
-void  STMVACreateMethodsTree(const char *params, const char *inputFileName, std::vector<double> &tb_vector,  std::vector<double> &tqb_vector , std::vector<double> &tbtqb_vector, const char *outputFileName){
+void  STMVACreateMethodsTree(const char *params, const char *inputFileName, std::vector<double> &ttA_172_vector, const char *outputFileName){
 
    STMVAConfig config(params);
    config.dump();
@@ -81,56 +119,56 @@ void  STMVACreateMethodsTree(const char *params, const char *inputFileName, std:
    TFile *f_input  = new TFile(inputFileName);                 // default parameter read only
    TFile *f_output = new TFile(outputFileName, "RECREATE");  // add parameter to recreate tree
 
-   TTree *t_input  = (TTree *) f_input->Get("TopologicalVariables");
+   TTree *t_input  = (TTree *) f_input->Get("nn_tree");
    TTree *t_output = new TTree(treeName, treeName);
 
   //declare variables and get pointers to required original variables from source tree
-  Double_t EventWeight; 			t_input->SetBranchAddress("EventWeight", &EventWeight);
-  Double_t HT_AllJetsLeptonMET; 		t_input->SetBranchAddress("HT_AllJetsLeptonMET", &HT_AllJetsLeptonMET);
+  Float_t EventWeight;         t_input->SetBranchAddress("Weight", &EventWeight);
+  Float_t Met; 		t_input->SetBranchAddress("Met", &Met);
 
   // Check number of events is equal to vector size
   Int_t n_events_original =  t_input->GetEntries();
-  if (n_events_original != tb_vector.size()  || n_events_original != tqb_vector.size() || n_events_original != tbtqb_vector.size() ){
-      std::cout << "no events:"        << n_events_original << "in" << inputFileName << std::endl;
-      std::cout << "tb_vector size"    << tb_vector.size()      << std::endl;
-      std::cout << "tqb_vector size"   << tqb_vector.size()     << std::endl;
-      std::cout << "tbtqb_vector size" << tbtqb_vector.size()   << std::endl;
+  if (n_events_original != ttA_172_vector.size() ){ //|| n_events_original != tqb_vector.size() || n_events_original != tbtqb_vector.size() ){
+      std::cout << "no. events:"        << n_events_original << "in" << inputFileName << std::endl;
+      std::cout << "ttA_172_vector size"    << ttA_172_vector.size()      << std::endl;
+      //std::cout << "tqb_vector size"   << tqb_vector.size()     << std::endl;
+      //std::cout << "tbtqb_vector size" << tbtqb_vector.size()   << std::endl;
       throw std::runtime_error("No. of events in the discriminant files differs from number of EventWeights in the input file");
     }
 
   // declare required variables and create output branches
-  t_output->Branch("EventWeight",         &EventWeight,         "EventWeight/D");
-  t_output->Branch("HT_AllJetsLeptonMET", &HT_AllJetsLeptonMET, "HT_AllJetsLeptonMET/D");
+  t_output->Branch("EventWeight",         &EventWeight,         "Weight/F");
+  t_output->Branch("Met", &Met, "Met/F");
   // Double_t tb,tqb,tbtqb;  
   // t_output->Branch("tb", &tb, "tb/D");
   // t_output->Branch("tgb", &tqb, "tqb/D");
   // t_output->Branch("tbtqb", &tbtqb, "tbtqb/D");
-  Double_t  channel_links[3];
-  char     *channel_names[]   =  {"tb", "tqb", "tbtqb",NULL};
-  char     *channel_types[]   =  {"tb/D", "tqb/D", "tbtqb/D"};
+  Float_t  channel_links[1];
+  char     *channel_names[]   =  {"ttA_172", NULL};
+  char     *channel_types[]   =  {"ttA_172/F",};
   for (Int_t i = 0; channel_names[i]; i++){
     t_output->Branch(channel_names[i],   &channel_links[i],   channel_types[i]);
   }
 
   //double maxelement[] = {-1*(std::numeric_limits<double>::infinity()),-1*(std::numeric_limits<double>::infinity()),-1*(std::numeric_limits<double>::infinity())};
   //double minelement[] = {(std::numeric_limits<double>::infinity()),(std::numeric_limits<double>::infinity()),(std::numeric_limits<double>::infinity())};
-    double maxelement[] = {1,1,1};
-    double minelement[] = {0,0,0};
+    Float_t maxelement[] = {1};
+    Float_t minelement[] = {0};
 
   // main loop: record required values into given branches
-  for (size_t i = 0; i < tb_vector.size(); i++) {
-    channel_links[0] = tb_vector[i];
-    channel_links[1] = tqb_vector[i];
-    channel_links[2] = tbtqb_vector[i];
+  for (size_t i = 0; i < ttA_172_vector.size(); i++) {
+    channel_links[0] = ttA_172_vector[i];
+//    channel_links[1] = tqb_vector[i];
+//    channel_links[2] = tbtqb_vector[i];
     //std::cout  <<  tb_vector[i] << tqb_vector[i] << tbtqb_vector[i] << std::endl;
     t_input  -> GetEvent(i);
     t_output -> Fill();
-    if (minelement[0] > tb_vector[i])    minelement[0] = tb_vector[i];
-    if (minelement[1] > tqb_vector[i])   minelement[1] = tqb_vector[i];
-    if (minelement[2] > tbtqb_vector[i]) minelement[2] = tbtqb_vector[i];
-    if (maxelement[0] < tb_vector[i])    minelement[0] = tb_vector[i];
-    if (maxelement[1] < tqb_vector[i])   minelement[1] = tqb_vector[i];
-    if (maxelement[2] < tbtqb_vector[i]) minelement[2] = tbtqb_vector[i];
+    if (minelement[0] > ttA_172_vector[i])    minelement[0] = ttA_172_vector[i];
+//    if (minelement[1] > tqb_vector[i])   minelement[1] = tqb_vector[i];
+//    if (minelement[2] > tbtqb_vector[i]) minelement[2] = tbtqb_vector[i];
+    if (maxelement[0] < ttA_172_vector[i])    minelement[0] = ttA_172_vector[i];
+//    if (maxelement[1] < tqb_vector[i])   minelement[1] = tqb_vector[i];
+//    if (maxelement[2] < tbtqb_vector[i]) minelement[2] = tbtqb_vector[i];
   }
    // double minelement = *std::min_element(tb_vector.begin(),tb_vector.end());
 
@@ -167,29 +205,20 @@ void  STMVACreateMethodsTree(const char *params, const char *inputFileName, std:
 int main(int argc, char** argv)
 {
   if (argc < 4) {
-    std::cout << "Evaluate data in \"input.root\" file by first method configured in \"STMVA.params\" files for tb, tqb and tbtqb channels and save results in to \"output.root\" file" << std::endl;
+    std::cout << "Evaluate data in \"input.root\" file by first method configured in \"STMVA.params\" files for ttA_172 channel and save results in to \"output.root\" file" << std::endl;
     std::cout << "Usage: " << argv[0] << " STMVA.params input.root output.root" << std::endl;
    }
 
   std::string params_path(argv[1]);
 
-  std::string params_tb    = params_path+"_tb";
-  std::string params_tqb   = params_path+"_tqb";
-  std::string params_tbtqb = params_path+"_tbtqb";
+  std::string params_ttA_172    = params_path+"ttA_172";
 
-  std::cout << "XXXXXX Evaulate for: "<< params_tb    << std::endl;
-  std::vector<double> tb_vector    = STMVAEvaluate(params_tb.c_str(),argv[2]);
+  std::cout << "-------- Evaluate for: "<< params_ttA_172    << std::endl;
+  std::vector<double> ttA_172_vector = STMVAEvaluate(params_ttA_172.c_str(),argv[2]);
   //std::copy(tb_vector.begin(),tb_vector.end(),std::ostream_iterator<double>(std::cout," "));
   //std::cout << std::endl;
 
-  std::cout << "XXXXXX Evaulate for: "<<  params_tqb   << std::endl;
-  std::vector<double> tqb_vector   = STMVAEvaluate(params_tqb.c_str(),argv[2]);
-
-  std::cout << "XXXXXX Evaulate for: "<<  params_tbtqb << std::endl;
-  std::vector<double> tbtqb_vector = STMVAEvaluate(params_tbtqb.c_str(),argv[2]);
-
-
-  STMVACreateMethodsTree(params_tb.c_str(), argv[2], tb_vector, tqb_vector, tbtqb_vector, argv[3]);
+  STMVACreateMethodsTree(params_ttA_172.c_str(), argv[2], ttA_172_vector, argv[3]);
 
   return 0;
 }

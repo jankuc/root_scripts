@@ -2,16 +2,18 @@
 import os, sys, re
 
 INPUT = 'STMVA.params.in'
-OUTPUT = 'STMVA.params.out'
-TEMPLATE = 'STMVA.params.template'
+OUTPUT = 'STMVA.params.out.cosi'
+TEMPLATE = 'STMVA.params.template.tt_leptonjets.ext'
 CHANNELS = [
-  ('EqOneTag', 'EqTwoJet'),
-  ('EqOneTag', 'EqThreeJet'),
-  ('EqTwoTag', 'EqTwoJet'),
-  ('EqTwoTag', 'EqThreeJet'),
+  ('muo', '2jet'),
+  ('muo', '3jet'),
+  ('muo', '4jet'),
+  ('ele', '2jet'),
+  ('ele', '3jet'),
+  ('ele', '4jet'),
 ]
-SIGNALS = [ 'tb', 'tqb', 'tb tqb', ]
-METHODS = [ 'BNN', 'BDT', ]
+SIGNALS = [ 'ttA_172', ]
+METHODS = [ 'MBC_and_BDT', ]
 #EXTMET = [ 'GLM' ]
 
 reLine = re.compile('^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)$')
@@ -30,19 +32,19 @@ for line in open(INPUT).readlines():
 
 for method in METHODS:
     for i, channel in enumerate(CHANNELS):
-        tagBin, jetBin = channel
+        lepton, jetBin = channel
         variables = [ x[0] for x in filter(lambda x: method in x[1][i], varList.items()) ]
         for signal in SIGNALS:
-            output = "STMVA.%s_%s_%s.root" % (tagBin, jetBin, signal.replace(" ",""))
+            output = "STMVA.%s_%s_%s.root" % (lepton, jetBin, signal.replace(" ",""))
             data = open(TEMPLATE).read()
             data = data.replace('XXX_OUTPUT_XXX', output)
-            data = data.replace('XXX_TAG_XXX', tagBin)
+            data = data.replace('XXX_TAG_XXX', lepton)
             data = data.replace('XXX_JET_XXX', jetBin)
             data = data.replace('XXX_SIGNAL_XXX', signal)
             data = data.replace('XXX_SIGNAL2_XXX', signal.replace("_",""))
             data = data.replace('XXX_VARIABLE_XXX', ' '.join(variables))
             data = data.replace('XXX_METHOD_XXX', method)
             #data = data.replace('XXX_METHOD_XXX', ' '.join([method]+EXTMET))
-            f = open("params/%s_%s_%s_%s_%s" % (OUTPUT, method, tagBin, jetBin, signal.replace(' ', '')), "w")
+            f = open("params/%s.%s_%s_%s_%s" % (OUTPUT, method, lepton, jetBin, signal.replace(' ', '')), "w")
             f.write(data)
             f.close()

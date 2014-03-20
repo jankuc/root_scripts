@@ -12,7 +12,7 @@ set=(train test yield data)
 setCutString=("(val==1)" "(val==2)" "(val==0)&&(type<2)" "type==2")
 
 # methods are derived from CreateMethodsTree.sh
-for method_path in ${input_root_files_path}/* ; do
+for method_path in ${input_root_files_path}/NNSU* ; do
 		method=$(basename $method_path)
 		echo $method
     for lepton in ele muo; do

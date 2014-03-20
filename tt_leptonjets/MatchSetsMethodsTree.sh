@@ -20,7 +20,7 @@ for set in train test yield data; do
 				method=`echo $methods|sed -e 's/.* //g'`
 				# looks for current root file in one of the methods and if its present continues
 				if [ -e ${input_results_path}/${method}/${set}/${lepton}/${jetBin}jet/$(basename $i) ] ; then
-					hadd \
+					hadd -f \
 					$outpath/$(basename ${i}) \
 					${input_results_path}/*/${set}/${lepton}/${jetBin}jet/$(basename $i) \
 					$i

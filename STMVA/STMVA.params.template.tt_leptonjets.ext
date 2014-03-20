@@ -1,14 +1,14 @@
 # paths to ROOT files with TopologicalVariables trees
 # path should not end with slash
-TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
-TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/test
+TrainingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
+TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
-DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/data
+DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 
 #TrainingPath: /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/train
-#TestingPath:  /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/test
+#TestingPath:  /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/yield
 #YieldsPath:   /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/yield
-#DataPath:     /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/data
+#DataPath:     /work/budvar-clued0/kuceraja/tt_leptonjets/results_root_matched_sets/yield
 
 
 # filename prefix/suffix for input root files
@@ -42,33 +42,63 @@ EventWeight: Weight
 Variable: XXX_VARIABLE_XXX
 
 # TMVA methods
-#Method: MBC_1_1_noTrans MBC_30_30_noTrans BDT
-Method: XXX_METHOD_XXX
+Method: BDT MBC_1_1_noTrans MBC_30_30_noTrans MBC_100_100_noTrans NNSU_no_gain_var_all_nonzero_weights NNSU_no_gain_var_first_5
+#M ethod: XXX_METHOD_XXX
 
 MBC_1_1_noTrans.Type:         TMVA::Types::kExternal
 MBC_1_1_noTrans.Params:       H:!V:VerbosityLevel=Debug
 MBC_1_1_noTrans.TreeName:     MBC_1_1_noTrans
 MBC_1_1_noTrans.LeaveName:    XXX_SIGNAL2_XXX
 MBC_1_1_noTrans.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
-MBC_1_1_noTrans.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/test
+MBC_1_1_noTrans.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 MBC_1_1_noTrans.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
-MBC_1_1_noTrans.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/data
+MBC_1_1_noTrans.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 
 MBC_30_30_noTrans.Type:         TMVA::Types::kExternal
 MBC_30_30_noTrans.Params:       H:!V:VerbosityLevel=Debug
 MBC_30_30_noTrans.TreeName:     MBC_30_30_noTrans
 MBC_30_30_noTrans.LeaveName:    XXX_SIGNAL2_XXX
 MBC_30_30_noTrans.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
-MBC_30_30_noTrans.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/test
+MBC_30_30_noTrans.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 MBC_30_30_noTrans.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
-MBC_30_30_noTrans.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/data
+MBC_30_30_noTrans.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+
+MBC_100_100_noTrans.Type:         TMVA::Types::kExternal
+MBC_100_100_noTrans.Params:       H:!V:VerbosityLevel=Debug
+MBC_100_100_noTrans.TreeName:     MBC_100_100_noTrans
+MBC_100_100_noTrans.LeaveName:    XXX_SIGNAL2_XXX
+MBC_100_100_noTrans.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
+MBC_100_100_noTrans.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+MBC_100_100_noTrans.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+MBC_100_100_noTrans.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+
+NNSU_no_gain_var_all_nonzero_weights.Type:         TMVA::Types::kExternal
+NNSU_no_gain_var_all_nonzero_weights.Params:       H:!V:VerbosityLevel=Debug
+NNSU_no_gain_var_all_nonzero_weights.TreeName:     NNSU_no_gain_var_all_nonzero_weights
+NNSU_no_gain_var_all_nonzero_weights.LeaveName:    XXX_SIGNAL2_XXX
+NNSU_no_gain_var_all_nonzero_weights.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
+NNSU_no_gain_var_all_nonzero_weights.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+NNSU_no_gain_var_all_nonzero_weights.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+NNSU_no_gain_var_all_nonzero_weights.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+
+NNSU_no_gain_var_first_5.Type:         TMVA::Types::kExternal
+NNSU_no_gain_var_first_5.Params:       H:!V:VerbosityLevel=Debug
+NNSU_no_gain_var_first_5.TreeName:     NNSU_no_gain_var_first_5
+NNSU_no_gain_var_first_5.LeaveName:    XXX_SIGNAL2_XXX
+NNSU_no_gain_var_first_5.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
+NNSU_no_gain_var_first_5.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+NNSU_no_gain_var_first_5.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+NNSU_no_gain_var_first_5.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 
 BDT.Type:   TMVA::Types::kBDT
 BDT.Params: !H:!V:NTrees=250:nEventsMin=150:MaxDepth=4:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20:PruneMethod=NoPruning
+BDT.TreeName:     BDT
+BDT.LeaveName:    XXX_SIGNAL2_XXX
 BDT.TrainingPath: /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/train
-BDT.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/test
+BDT.TestingPath:  /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
 BDT.YieldsPath:   /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
-BDT.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/data
+BDT.DataPath:     /work/budvar-clued0/fjfi-D0/tt_leptonjets/results_root_matched_sets/yield
+
 #Parameters used for the BDT
 #1. Number of Boosting Cycles: 30
 #2. Minimal Leaf Size: 100

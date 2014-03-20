@@ -2,7 +2,7 @@
 import os, sys, re
 
 INPUT = 'STMVA.params.in'
-OUTPUT = 'STMVA.params.out'
+OUTPUT = 'STMVA.params.out.MBCaNNSUaBDT'
 TEMPLATE = 'STMVA.params.template.tt_leptonjets.ext'
 CHANNELS = [
   ('muo', '2jet'),
@@ -15,7 +15,7 @@ CHANNELS = [
 
 SIGNALS = [ 'ttA_172', ]
 #METHODS = [ 'BNN', 'BDT', ]
-METHODS = [ 'MBC_and_BDT' ]
+METHODS = [ 'MBC_and_NNSU_and_BDT' ]
 SAMPLES_MU = ["QCD","Wlp","Wcc","Wbb","ZbbMuMu","ZbbTauTau","ZccMuMu","ZccTauTau","ZlpMuMu","ZlpTauTau","tb","tqb","WW","WZ","ZZ","ttAll_172","ttA_172"] 
 SAMPLES_ELE = ["QCD","Wlp","Wcc","Wbb","ZbbEE","ZbbTauTau","ZccEE","ZccTauTau","ZlpEE","ZlpTauTau","tb","tqb","WW","WZ","ZZ","ttAll_172","ttA_172"]
 #EXTMET = [ 'GLM' ]
@@ -73,6 +73,6 @@ for method in METHODS:
             
             data = data.replace('XXX_METHOD_XXX', method)
             #data = data.replace('XXX_METHOD_XXX', ' '.join([method]+EXTMET))
-            f = open("params/%s_%s_%s_%s_%s" % (OUTPUT, method, lepton, jetBin, signal.replace(' ', '')), "w")
+            f = open("params/%s.%s_%s_%s_%s" % (OUTPUT, method, lepton, jetBin, signal.replace(' ', '')), "w")
             f.write(data)
             f.close()

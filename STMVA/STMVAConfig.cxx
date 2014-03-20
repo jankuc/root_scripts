@@ -44,7 +44,7 @@ STMVAConfig::STMVAConfig(const char *filename) {
   std::istringstream variables(env.GetValue("Variable", ""));
   std::istringstream spectators(env.GetValue("Spectator", ""));
   std::istringstream methods(env.GetValue("Method", ""));
-
+    
   if (_lepton != "muo" && _lepton != "ele")
     throw std::runtime_error("invalid Lepton = \""+_lepton+"\" in "+_configFile);
   if (_jetBin != "2jet" && _jetBin != "3jet" && _jetBin != "4jet")
@@ -58,22 +58,27 @@ STMVAConfig::STMVAConfig(const char *filename) {
   if (_treeName == "")
     throw std::runtime_error("invalid TreeName = \""+_treeName+"\" in "+_configFile);
 
-  copy(std::istream_iterator<std::string>(samples),
+  std::copy(std::istream_iterator<std::string>(samples),
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(_samples));
-  copy(std::istream_iterator<std::string>(signals),
+  std::copy(std::istream_iterator<std::string>(signals),
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(_signals));
-  copy(std::istream_iterator<std::string>(variables),
+  std::copy(std::istream_iterator<std::string>(variables),
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(_variables));
-  copy(std::istream_iterator<std::string>(spectators),
+  std::copy(std::istream_iterator<std::string>(spectators),
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(_spectators));
-  copy(std::istream_iterator<std::string>(methods),
+  std::copy(std::istream_iterator<std::string>(methods),
        std::istream_iterator<std::string>(),
        std::back_inserter<std::vector<std::string> >(_methods));
 
+  for (std::vector<std::string>::const_iterator it = _methods.begin();
+            it != _methods.end(); ++it) {
+    std::string method(*it);
+    std::cout << "-------- Method: " << method.c_str() << std::endl;
+  }
   _trainingSignals = getInputPaths("TrainingPath", _trainingPath, trainingFilePrefix, trainingFileSuffix, true);
   _trainingBackgrounds = getInputPaths("TrainingPath", _trainingPath, trainingFilePrefix, trainingFileSuffix, false);
   _testingSignals = getInputPaths("TestingPath", _testingPath, testingFilePrefix, testingFileSuffix, true);
@@ -186,8 +191,6 @@ STMVAConfig::STMVAConfig(const char *filename) {
     _methodsParams[method] = methodParams;
   }
 }
-
-
 
 void STMVAConfig::dump() {
   std::cout << "STMVAConfig.ConfigFile: " << _configFile << std::endl;
@@ -309,7 +312,7 @@ void STMVAConfig::checkMethodsInputs(std::string cfgName, std::vector<std::strin
     if (!t2->GetLeaf(lname.c_str()))
       throw std::runtime_error(cfgName+" can't get tree \""+tname2+"\" leave \""+lname+"\" from "+paths2[i]);
     if (t1->GetEntries() != t2->GetEntries())
-      throw std::runtime_error(cfgName+" different tree size for "+paths1[i]+"["+tname1+"] and "+paths1[i]+"["+tname1+"]");
+      throw std::runtime_error(cfgName+" different tree size for "+paths1[i]+"["+tname1+"] and "+paths2[i]+"["+tname1+"]");
 
     //std::cout << "DEBUG: " << t1->GetEntries() << " in " << paths1[i] << ":/" << tname1 << " and " << paths2[i] << ":/" << tname2 << std::endl;
 
