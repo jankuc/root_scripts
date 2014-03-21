@@ -14,7 +14,7 @@ script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/tt_leptonjets/CreateMethod
 for lepton in muo ele; do
     echo $lepton
     #  for methods in IINC0_no_gain_var_all_nonzero_weights IINC2_no_gain_var_all_nonzero_weights MBC_1_1_MD_noTransformation MBC_1_1_noTransformation MBC_50_20_MD_noTransformation NNSU_no_gain_var_all_nonzero_weights RF_no_gain_var_all_nonzero_weights ; do
-    for method_full_path in  $results_txt_path/NNSU*  ; do
+    for method_full_path in  $results_txt_path/*  ; do
         method=$(basename ${method_full_path})
         echo $method
         for i in ${input_root_files_path}/split_trees_3samples_${lepton}_1119/* ; do

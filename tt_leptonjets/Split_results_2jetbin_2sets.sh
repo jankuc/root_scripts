@@ -10,9 +10,10 @@ script_path=/work/budvar-clued0/kuceraja/FNAL/scripts/tt_leptonjets/CutTree
 
 set=(train test yield data)
 setCutString=("(val==1)" "(val==2)" "(val==0)&&(type<2)" "type==2")
+jetCutString=("(NJets==1)" "(NJets==2)" "(NJets==3)" "(NJets>=4)")
 
 # methods are derived from CreateMethodsTree.sh
-for method_path in ${input_root_files_path}/NNSU* ; do
+for method_path in ${input_root_files_path}/* ; do
 		method=$(basename $method_path)
 		echo $method
     for lepton in ele muo; do
@@ -31,7 +32,7 @@ for method_path in ${input_root_files_path}/NNSU* ; do
                         $script_path  \
                         $rootFile  \
                         $outPath  \
-                        "(NJets=="${jetBin}")&&"${setCutString[$setI]} \
+                        ${jetCutString[$jetBin-1]}"&&"${setCutString[$setI]} \
                         $method
                     fi
                     if [ $setI -eq 3 -a "$(basename $rootFile)" == "data_miniTree.root" ]; then
@@ -40,7 +41,7 @@ for method_path in ${input_root_files_path}/NNSU* ; do
                         $script_path  \
                         $rootFile  \
                         $outPath  \
-                        "(NJets=="${jetBin}")" \
+                        ${jetCutString[$jetBin-1]} \
                         $method
                     fi
                 done	

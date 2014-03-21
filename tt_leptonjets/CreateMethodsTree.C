@@ -61,7 +61,7 @@ void CreateMethodsTree(char *source_main = "colTree.root",
     // declare required variables
     Int_t n_events_original = t_source->GetEntries();
     Int_t n_events[] = {0}; //there was {0,0,0}
-    Double_t channel_links[3];
+    Double_t channel_links[1];
     char *source_channel[] = {source_channel1, NULL}; //there was {src_ch1,src_ch2,src_ch3,NULL}
     char *channel_names[] = {"ttA_172", NULL}; //there was {"src_ch1","src_ch2","src_ch3",NULL}
     char *channel_types[] = {"ttA_172/D"}; //there was {"src_ch1","src_ch2","src_ch3"}
@@ -69,18 +69,18 @@ void CreateMethodsTree(char *source_main = "colTree.root",
     Float_t min_disc[] = {0}; //there was {0,0,0}
     Double_t disc;
     vector<Double_t> channels[1];
-
+    
     // create output branches
     t_output->Branch("Weight", &Weight, "Weight/F");
     t_output->Branch("type", &type, "type/I");
     t_output->Branch("val", &val, "val/I");
     t_output->Branch("NJets", &NJets, "NJets/I");
-
+    
     //t_output->Branch(channel_names[i].c_str(),   &s,   string(channel_names[i]+"/D").c_str());
     for (Int_t i = 0; channel_names[i]; i++) {
         t_output->Branch(channel_names[i], &channel_links[i], channel_types[i]);
     }
-
+    
     // control input paths, find maximal discriminants, compare number of events
     for (Int_t i = 0; source_channel[i]; i++) {
         ifstream indata(source_channel[i]);
@@ -89,29 +89,30 @@ void CreateMethodsTree(char *source_main = "colTree.root",
         while (true) {
             indata >> disc;
             
-            if (indata.fail()) {
-                throw runtime_error("Couldn't load line properly. " + (int) disc );
-            }
             if (!indata) break;
             channels[i].push_back(disc);
             n_events[i]++;
-            if (max_disc[i] < disc)
+            if (max_disc[i] < disc) {
                 max_disc[i] = disc;
-            if (min_disc[i] > disc)
+            }
+            if (min_disc[i] > disc) {
                 min_disc[i] = disc;
+            }
+                
         }
+        cout << "--------Max disc: " <<  Form("%f", max_disc[i]) << ", Min disc: " << Form("%f", min_disc[i]) << endl;
         if (n_events_original != n_events[i]) {
-            cout << "pocet v source:" << n_events_original << endl;
-            cout << "pocet v " << i << "-tem kanalu:" << n_events[i] << endl;
+            cout << "nEvents in source:" << n_events_original << endl;
+            cout << "nEvents in  " << i << "-th channel:" << n_events[i] << endl;
             throw runtime_error("No. of events in the discriminant file differs from number of Weights in the source file: "
                     + string(source_channel[i]));
         }
     }
 
-    // main loop: record required values into given branches
+    // main loop: record required values into given branches  
     for (Int_t j = 0; j < n_events_original; j++) {
         for (Int_t i = 0; channel_names[i]; i++) {
-            channel_links[i] = 2 * (channels[i][j] - min_disc[i]) / (max_disc[i] - min_disc[i]) -1;
+            channel_links[i] = (channels[i][j] - min_disc[i]) / (max_disc[i] - min_disc[i]);
         }
         t_source -> GetEvent(j);
         t_output -> Fill();
