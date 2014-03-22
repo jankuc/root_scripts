@@ -14,13 +14,19 @@ CutTree.C
 	Provide full paths! 
 
 MatchMethodsTree.C
-MatchMethodsTree.sh
-MergeMethodsTree.C
-MergeMethodsTree.sh
+
+MatchSetsMethodsTree.sh
+	PARAMETERS: none
+	Matches set root files in samples_root_sets and results_root_sets. Saves new files to results_root_matched_sets
 
 Split_samples_2jetbin_2sets.sh
 	PARAMETERS: none
-	Uses CutTree.C
+	Uses CutTree.C to split the root trees into sets of (yield, train, test, data) and (2-, 3-, 4-)jetbin
+
+Split_results_2jetbin_2sets.sh
+	PARAMETERS: none
+	Uses CutTree.C to split the root results-methods trees into sets of (yield, train, test, data) and (2-, 3-, 4-)jetbin
+
 Txt2Root.C
 Txt2Root.sh
 
