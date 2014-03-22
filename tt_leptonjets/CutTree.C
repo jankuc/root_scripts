@@ -22,6 +22,7 @@ using namespace std;
   input_root_file     *.root full path of one of channels (QCD, data, Wlp, ...)
   output_root_file    *.root full output path of one of channels (QCD, data, Wlp, ...)
   cutString           string which will be used for cutting the tree eg. "val==1"
+  tree name
 */
 void  cutTree(char *input_root_file, char *output_root_file, char *cutString, char *tree_name){
 
