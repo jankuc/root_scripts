@@ -1,0 +1,102 @@
+# paths to ROOT files with TopologicalVariables trees
+TrainingPath: /work/budvar-clued0/francji/subsets/small_training_sample/
+TestingPath:  /work/budvar-clued0/francji/subsets/testing_sample/
+YieldsPath:   /work/budvar-clued0/francji/subsets/yield_sample/
+DataPath:     /work/budvar-clued0/francji/subsets/yield_sample/
+
+# filename prefix/suffix for input root files
+#TrainingFilePrefix: p17_CC_
+#TrainingFileSuffix: _zero_Topo_small_training_sample.root
+#TestingFilePrefix: p17_CC_
+#TestingFileSuffix: _zero_Topo_testing_sample.root
+#YieldsFilePrefix: p17_CC_
+#YieldsFileSuffix: _zero_Topo_yield_sample.root
+#DataFilePrefix: p17_CC_
+#DataFileSuffix: _zero_Topo_yield_sample.root
+
+# TMVA output file
+OutputPath: .
+OutputName: XXX_OUTPUT_NAME_XXX
+
+# tree name in input ROOT files
+TreeName: TopologicalVariables
+
+# channel - JetBin \in (EqTwoJet, EqThreeJet), TagBin \in (EqOneTag, EqTwoTag)
+TagBin: XXX_TAG_XXX
+JetBin: XXX_JET_XXX
+
+# signal and background samples
+Samples: diboson QCD tb tqb ttbar-dilepton ttbar-lepjets wbb wcc wlp zbb zcc zlp
+Signals: XXX_SIGNAL_XXX
+
+# variables used to build discriminant
+EventWeight: EventWeight
+Variable: XXX_VARIABLE_XXX
+
+# TMVA methods
+Method: XXX_METHOD_XXX
+
+# Specify only "Type" and "Params" for standard TMVA methods
+# "Type" corresponds to enum name of the first parameter in factory->BookMethod
+# "Params" corresponds to string of the third parameter in factory->BookMethod
+
+BDT.Type:   TMVA::Types::kBDT
+BDT.Params: !H:!V:NTrees=250:nEventsMin=150:MaxDepth=4:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:nCuts=20:PruneMethod=NoPruning
+#Parameters used for the BDT
+#1. Number of Boosting Cycles: 30
+#2. Minimal Leaf Size: 100
+#3. Ada Boost Parameter: 0.20
+#4. Impurity Measure: Gini
+#5. Boosting Purity Limit: 0.5
+#6. Used higher-ranked 30 variables
+
+BNN.Type:   TMVA::Types::MLP
+BNN.Params: H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:!UseRegulator
+#1. No. of Hidden Nodes = 20
+#2. No. of epochs = 300
+#3. Average over last 100 networks
+
+
+#Parameters used for the BNNComb
+#1. No. of Hidden Nodes = 6
+#2. No. of epochs = 500
+#3. Average over last 100 networks
+
+
+# External method use separate ROOT files with tree that contain
+# value given by method discriminator. Tree name (and leaf name)
+# must be uniqueue with respect to all input trees and External methods
+GLM.Type:         TMVA::Types::kExternal
+GLM.Params:       H:!V
+GLM.TreeName:     GLM
+GLM.LeaveName:    XXX_SIGNAL2_XXX
+GLM.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/GLM
+GLM.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/GLM
+GLM.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/GLM
+GLM.DataPath:     /work/budvar-clued0/francji/results/yield_sample/GLM
+#GLM.TrainingFilePrefix: p17_CC_
+GLM.TrainingFileSuffix: _zero_small_training_sample.root
+#GLM.TestingFilePrefix: p17_CC_
+GLM.TestingFileSuffix: _zero_testing_sample.root
+#GLM.YieldsFilePrefix: p17_CC_
+GLM.YieldsFileSuffix: _zero_yield_sample.root
+#GLM.DataFilePrefix: p17_CC_
+GLM.DataFileSuffix: _zero_yield_sample.root
+
+MBC.Type:         TMVA::Types::kExternal
+MBC.Params:       H:!V
+MBC.TreeName:     MBC
+MBC.LeaveName:    XXX_SIGNAL2_XXX
+MBC.TrainingPath: /work/budvar-clued0/francji/results/small_training_sample/MBC
+MBC.TestingPath:  /work/budvar-clued0/francji/results/testing_sample/MBC
+MBC.YieldsPath:   /work/budvar-clued0/francji/results/yield_sample/MBC
+MBC.DataPath:     /work/budvar-clued0/francji/results/yield_sample/MBC
+#MBC.TrainingFilePrefix: p17_CC_
+MBC.TrainingFileSuffix: _zero_small_training_sample.root
+#MBC.TestingFilePrefix: p17_CC_
+MBC.TestingFileSuffix: _zero_testing_sample.root
+#MBC.YieldsFilePrefix: p17_CC_
+MBC.YieldsFileSuffix: _zero_yield_sample.root
+#MBC.DataFilePrefix: p17_CC_
+MBC.DataFileSuffix: _zero_yield_sample.root
+
